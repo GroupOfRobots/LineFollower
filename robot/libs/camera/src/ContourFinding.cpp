@@ -52,8 +52,7 @@ void ContourFinding::scaleImage(){
 	resize(outputFrame, outputFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
 	resize(sourceFrame, sourceFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
 	pointToStartCutting = Point(0,outputFrame.rows/3);
-	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);
-	
+	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);	
 }
 
 void ContourFinding::cutImage(){

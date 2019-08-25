@@ -10,11 +10,15 @@ using namespace std;
 
 class CenterFinding{
 	private:
+		Point pointToStartCutting;
+		Point pointToFinishCutting;
 		Mat sourceFrame;
 		Mat outputFrame; 
 		int max_kernel_size = 21;
 		int max_kernel_length = 31;
+		double scaleFactor = 0.5;
 		
+		void scaleImage();
 		void cutImage();
 		void toGrayScale();
 		void useBlur();
@@ -27,6 +31,12 @@ class CenterFinding{
 		CenterFinding();
 		CenterFinding(Mat frame);
 		void setSourceFrame(Mat frame);
+		void setFrame(Mat frame);
+		void setPointsToApproachCutting(Point startPoint, Point endPoint);
+		Point getStartPointToApproachCutting();
+		Point getEndPointToApproachCutting();
+		void setScaleFactor(double scaleFactor);
+		double getScaleFactor();
 		Mat getSourceFrame();
 		Mat getOutputFrame();
 		vector<Point> findLineCenters();

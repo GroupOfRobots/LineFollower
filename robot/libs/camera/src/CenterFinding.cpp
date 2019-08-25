@@ -5,6 +5,51 @@ CenterFinding::CenterFinding(){}
 CenterFinding::CenterFinding(Mat frame){
 	sourceFrame = frame;
 	outputFrame = frame;
+	pointToStartCutting = Point(0,outputFrame.rows/3);
+	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);
+}
+
+void CenterFinding::setFrame(Mat frame){
+	sourceFrame = frame;
+	outputFrame = frame;
+	pointToStartCutting = Point(0,outputFrame.rows/3);
+	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);
+}
+
+Mat CenterFinding::getSourceFrame(){
+	return sourceFrame;
+}
+
+Mat CenterFinding::getOutputFrame(){
+	return outputFrame;
+}
+
+Point CenterFinding::getStartPointToApproachCutting(){
+	return pointToStartCutting;
+}
+
+Point CenterFinding::getEndPointToApproachCutting(){
+	return pointToFinishCutting;
+}
+
+void CenterFinding::setPointsToApproachCutting(Point startPoint, Point endPoint){
+	pointToStartCutting = startPoint;
+	pointToFinishCutting = endPoint;
+}
+
+void CenterFinding::setScaleFactor(double scaleFactor){
+	this->scaleFactor = scaleFactor;
+}
+
+double CenterFinding::getScaleFactor(){
+	return this->scaleFactor;
+}
+
+void CenterFinding::scaleImage(){
+	resize(outputFrame, outputFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
+	resize(sourceFrame, sourceFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
+	pointToStartCutting = Point(0,outputFrame.rows/3);
+	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);	
 }
 
 void CenterFinding::cutImage(){
@@ -15,6 +60,7 @@ void CenterFinding::cutImage(){
 void CenterFinding::toGrayScale(){
 	cvtColor(outputFrame, outputFrame, cv::COLOR_RGB2GRAY);
 }
+
 void CenterFinding::useBlur(){
 	medianBlur (outputFrame, outputFrame, max_kernel_length);
 }
@@ -64,25 +110,14 @@ vector<Point> CenterFinding::findCenters(){
 	return centers;
 }
 
-void CenterFinding::setSourceFrame(Mat frame){
-	sourceFrame = frame;
-	outputFrame = frame;
-}
-
-Mat CenterFinding::getSourceFrame(){
-	return sourceFrame;
-}
-
-Mat CenterFinding::getOutputFrame(){
-	return outputFrame;
-}
-
 vector<Point> CenterFinding::findLineCenters(){
+	scaleImage();
+	
 	cutImage();
 
 	toGrayScale();
 
-	useBlur();
+	//useBlur();//commented, because might be unuseful
 
 	Mat element = getStructuringElement( MORPH_RECT,Size( 2*max_kernel_size + 1, 2*max_kernel_size+1 ),Point( max_kernel_size, max_kernel_size ));
 

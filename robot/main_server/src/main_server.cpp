@@ -18,6 +18,7 @@
 #include <opencv2/opencv.hpp>
 #include "UdpJpgFrameStreamer.h"
 #include "ContourFinding.h"
+#include "CenterFinding.h"
 using namespace cv;
 using namespace std;
 
@@ -63,8 +64,11 @@ int main()
 
 	UdpJpgFrameStreamer streamer;
 	ContourFinding contourFinder;
+	CenterFinding centerFinder;
 	Mat src;
-
+	std::cout<<"Contour or center finding? (1/2)";
+	int method;
+	std::cin>>method;
 	while(1){
 		streamer.waitForClient();
 
@@ -88,13 +92,23 @@ int main()
 		    	    break;
 		    	}
 			
-			contourFinder.setFrame(src);
-			contourFinder.setScaleFactor(0.3);//default is 0.5
-			auto start = chrono::steady_clock::now(); 
-			streamer.pushFrame(contourFinder.drawPoints(contourFinder.findLineCenters()));
-			auto end = chrono::steady_clock::now();
-			cout << "Elapsed time in microseconds : " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-			<< " µs" << endl;
+			if(method == 1)
+			{
+				contourFinder.setFrame(src);
+				contourFinder.setScaleFactor(0.3);//default is 0.5
+				//auto start = chrono::steady_clock::now(); 
+				streamer.pushFrame(contourFinder.drawPoints(contourFinder.findLineCenters()));
+				//auto end = chrono::steady_clock::now();
+				//cout << "Elapsed time in microseconds : " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+				//<< " µs" << endl;
+			}
+
+			else
+			{
+				centerFinder.setFrame(src);
+				centerFinder.setScaleFactor(0.3);//default is 0.5
+				streamer.pushFrame(centerFinder.drawPoints(centerFinder.findLineCenters()));
+			}
      	}
 
 		clipCapture.release();
