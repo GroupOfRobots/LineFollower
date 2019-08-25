@@ -96,7 +96,7 @@ vector<Point> ContourFinding::findCenters(){
 		for( int i = 0; i< contours.size(); i++ ){
        			double a=contourArea(contours[i],false);
        			if(a>largest_area)
-			{
+				{
        				largest_area=a;
        				largest_contour_index=i;
        			}
@@ -147,31 +147,33 @@ Mat ContourFinding::drawPoints(vector<Point> centers){
 
 	//rysowanie wykrytych środków ciężkosci linii i konturów
 	Scalar color(0, 0, 255);
-
+    Scalar colorContour(0, 255, 0);
 	
 	//przesunięcie konturu
 	for( int i = 0; i< contour.size(); i++ )
-    	{
-        	contour[i]+=pointToStartCutting;
-    	}
+    {
+        contour[i]+=pointToStartCutting;
+    }
 	
 	contours.push_back(contour);
 
 	//rysowanie konturu
-	drawContours(frame, contours, 0, color, 2, 8);
-	
+	if (contours.size() == 0) {
+		drawContours(frame, contours, 0, color, 2, 8);
+	}
 
-	//rysowanie linii zasięgu
-	//line(frame, pointToStartCutting, pointToFinishCutting, Scalar(0, 255, 0));
-	rectangle( frame, pointToStartCutting, pointToFinishCutting, Scalar( 0, 255, 0), 0, 8 );
-
+	//rysowanie prostokąta zasięgu
+	rectangle( frame, pointToStartCutting, pointToFinishCutting, colorContour, 0, 8 );
 
 	//rysowanie środka ciężkosci konturu
 	for(int i=0;i<centers.size();i++)
 	{
-    		//rysowanie wykrytego środka ciężkosci figury
-    		circle(frame, centers[i]+pointToStartCutting, 5, color, -1, 8);
-    	}
+    	//rysowanie wykrytego środka ciężkosci figury
+    	circle(frame, centers[i]+pointToStartCutting, 5, color, -1, 8);
+    }
+
+	//rysowanie linii
+	line(frame, Point(centers[0].x,0), Point(centers[0].x, frame.rows), color,2);
 
 	return frame;
 }

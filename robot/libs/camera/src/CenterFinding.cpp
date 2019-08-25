@@ -139,12 +139,18 @@ Mat CenterFinding::drawPoints(vector<Point> centers){
 	Scalar colorPoint(0, 0, 255);
 	Scalar colorLine(0, 255, 0);
 
+	double mean = 0;
+
 	//rysowanie linii i jej środka ciężkosci
 	for(int i=0;i<centers.size();i++)
 	{
 		line(frame,Point(0,centers[i].y),Point(frame.cols,centers[i].y),colorLine);
-    		circle(frame, centers[i], 5, colorPoint, -1, 8);
+    	circle(frame, centers[i], 5, colorPoint, -1, 8);
+		mean += centers[i].x/centers.size();
     }
+	
+	//rysowanie linii
+    line(frame, Point(mean,0), Point(mean,frame.rows), colorPoint,2);
 
 	return frame;
 }
