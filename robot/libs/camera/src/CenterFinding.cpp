@@ -82,7 +82,7 @@ void CenterFinding::thresholdFrame(){
 
 vector<Point> CenterFinding::findCenters(){
 	vector<Point> centers;
-	int spaceWidth = outputFrame.rows/numOfPoints;
+	int spaceWidth = outputFrame.rows/(numOfPoints+1);
 	int sum = 0;
 	int center = 0;
 	int whitePixelCounter = 0;
@@ -114,7 +114,8 @@ vector<Point> CenterFinding::findCenters(){
 vector<Point> CenterFinding::findLineCenters(){
 	scaleImage();
 	
-	cutImage();
+	//unneccesary here
+	//cutImage();
 
 	toGrayScale();
 
@@ -144,10 +145,6 @@ Mat CenterFinding::drawPoints(vector<Point> centers){
 		line(frame,Point(0,centers[i].y),Point(frame.cols,centers[i].y),colorLine);
     		circle(frame, centers[i], 5, colorPoint, -1, 8);
     }
-
-	//rysowanie linii zasięgu
-	//line(frame, pointToStartCutting, pointToFinishCutting, Scalar(0, 255, 0));
-	rectangle( frame, pointToStartCutting, pointToFinishCutting, Scalar( 0, 255, 0), 0, 8 );
 
 	return frame;
 }
