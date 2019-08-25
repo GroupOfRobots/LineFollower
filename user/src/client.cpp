@@ -3,6 +3,8 @@
 #include <boost/asio.hpp>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include <ctime>
+#include <chrono>
 using namespace cv;
 using namespace std;
 using boost::asio::ip::udp;
@@ -33,28 +35,46 @@ int main(int argc, char* argv[])
     udp::resolver resolver(io_service);
     udp::resolver::query query(udp::v4(), argv[1], "2024");
     udp::endpoint receiver_endpoint = *resolver.resolve(query);
-
     udp::socket socket(io_service);
     socket.open(udp::v4());
-
     boost::array<char, 1> send_buf  = {{ 0 }};
-    socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
-
     boost::array<char, 64000> recv_buf;
-    //std::vector<uchar> recv_buf;
     udp::endpoint sender_endpoint;
     std::size_t bytesReceived =1;
-    while(bytesReceived!=0){
-    	bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-    	//std::cerr << "ok2" << std::endl;
-    	//std::cout.write(recv_buf.data(), bytesReceived);
-    	if(recv_buf.empty()){std::cerr << "Buf is empty, got " <<bytesReceived << "bytes"<< std::endl;}
 
-    	std:vector<char> data(recv_buf.begin(), recv_buf.end());
-    	dst=imdecode(data,1);
-    	//std::cerr << "ok3" << std::endl;
-	resize(dst, dst, Size(0,0), scaleFactor, scaleFactor, 1);
-    	display_dst(27,"Received");	
+    auto start = chrono::steady_clock::now();
+    socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
+    
+    int first = 1;
+    while(bytesReceived != 0){      
+      bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+      
+      const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+			// Get the time offset in current day
+    	const boost::posix_time::time_duration td = now.time_of_day();
+			const long hours = td.hours();
+    	const long minutes = td.minutes();
+    	const long seconds = td.seconds();
+    	const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
+			char buf[40];
+    	sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
+    	cout<<"Receive time: "<<buf<<endl;
+
+      if(first == 1){
+        auto end = chrono::steady_clock::now();
+        first = 0;
+        cout << "Transfer time in microseconds: " << chrono::duration_cast<chrono::milliseconds>(end - start).count()/2
+				<< " ms" << endl;
+      }
+
+      //std::cout.write(recv_buf.data(), bytesReceived);
+      if(recv_buf.empty()){std::cerr << "Buf is empty, got " <<bytesReceived << "bytes"<< std::endl;}
+
+      std:vector<char> data(recv_buf.begin(), recv_buf.end());
+      dst=imdecode(data,1);
+
+	    resize(dst, dst, Size(0,0), scaleFactor, scaleFactor, 1);
+      display_dst(27,"Received");	
 	}
 	destroyAllWindows();
     

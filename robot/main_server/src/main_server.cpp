@@ -96,18 +96,48 @@ int main()
 			{
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(0.3);//default is 0.5
-				//auto start = chrono::steady_clock::now(); 
-				streamer.pushFrame(contourFinder.drawPoints(contourFinder.findLineCenters()));
-				//auto end = chrono::steady_clock::now();
-				//cout << "Elapsed time in microseconds : " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-				//<< " µs" << endl;
+
+				auto start = chrono::steady_clock::now(); 
+				std::vector<cv::Point> centers = contourFinder.findLineCenters();
+				auto end = chrono::steady_clock::now();
+				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+				<< " µs" << endl;
+				Mat frame = contourFinder.drawPoints(centers);
+				const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+				// Get the time offset in current day
+    			const boost::posix_time::time_duration td = now.time_of_day();
+				const long hours = td.hours();
+    			const long minutes = td.minutes();
+    			const long seconds = td.seconds();
+    			const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
+				char buf[40];
+    			sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
+    			cout<<"Send time in microseconds: "<<buf<<endl;
+				streamer.pushFrame(frame);
 			}
 
 			else
 			{
 				centerFinder.setFrame(src);
 				centerFinder.setScaleFactor(0.3);//default is 0.5
-				streamer.pushFrame(centerFinder.drawPoints(centerFinder.findLineCenters()));
+
+				auto start = chrono::steady_clock::now();
+				std::vector<cv::Point> centers = centerFinder.findLineCenters();
+				auto end = chrono::steady_clock::now();
+				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+				<< " µs" << endl;
+				Mat frame  = centerFinder.drawPoints(centers);
+				const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+				// Get the time offset in current day
+    			const boost::posix_time::time_duration td = now.time_of_day();
+				const long hours = td.hours();
+    			const long minutes = td.minutes();
+    			const long seconds = td.seconds();
+    			const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
+				char buf[40];
+    			sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
+    			cout<<"Send time: "<<buf<<endl;
+				streamer.pushFrame(frame);
 			}
      	}
 
