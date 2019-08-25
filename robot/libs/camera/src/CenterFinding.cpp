@@ -143,7 +143,11 @@ Mat CenterFinding::drawPoints(vector<Point> centers){
 	{
 		line(frame,Point(0,centers[i].y),Point(frame.cols,centers[i].y),colorLine);
     		circle(frame, centers[i], 5, colorPoint, -1, 8);
-    	}
+    }
+
+	//rysowanie linii zasięgu
+	//line(frame, pointToStartCutting, pointToFinishCutting, Scalar(0, 255, 0));
+	rectangle( frame, pointToStartCutting, pointToFinishCutting, Scalar( 0, 255, 0), 0, 8 );
 
 	return frame;
 }
