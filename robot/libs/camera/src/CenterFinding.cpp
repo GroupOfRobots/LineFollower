@@ -1,8 +1,11 @@
 #include "CenterFinding.h"
 
-CenterFinding::CenterFinding(){}
+CenterFinding::CenterFinding(int numOfPoints){
+	this->numOfPoints = numOfPoints;
+}
 
-CenterFinding::CenterFinding(Mat frame){
+CenterFinding::CenterFinding(Mat frame, int numOfPoints){
+	this->numOfPoints = numOfPoints;
 	sourceFrame = frame;
 	outputFrame = frame;
 	pointToStartCutting = Point(0,outputFrame.rows/3);
@@ -79,8 +82,7 @@ void CenterFinding::thresholdFrame(){
 
 vector<Point> CenterFinding::findCenters(){
 	vector<Point> centers;
-	int spaceWidth = outputFrame.rows/8;
-	//cout<<"space: "<<spaceWidth<<endl;
+	int spaceWidth = outputFrame.rows/numOfPoints;
 	int sum = 0;
 	int center = 0;
 	int whitePixelCounter = 0;
@@ -94,7 +96,6 @@ vector<Point> CenterFinding::findCenters(){
 				sum+=j;
 				whitePixelCounter++;
 			}
-			//cout<<"row: "<<i<<" column: "<<j<<endl;
 		}
 
 		if(whitePixelCounter != 0)

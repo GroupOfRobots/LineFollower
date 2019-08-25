@@ -14,6 +14,7 @@ class CenterFinding{
 		Point pointToFinishCutting;
 		Mat sourceFrame;
 		Mat outputFrame; 
+		int numOfPoints;
 		int max_kernel_size = 21;
 		int max_kernel_length = 31;
 		double scaleFactor = 0.5;
@@ -28,8 +29,8 @@ class CenterFinding{
 		vector<Point> findCenters();
 		
 	public:
-		CenterFinding();
-		CenterFinding(Mat frame);
+		CenterFinding(int numOfPixels = 3);
+		CenterFinding(Mat frame, int numOfPixels = 3);
 		void setSourceFrame(Mat frame);
 		void setFrame(Mat frame);
 		void setPointsToApproachCutting(Point startPoint, Point endPoint);

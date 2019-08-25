@@ -64,7 +64,7 @@ int main()
 
 	UdpJpgFrameStreamer streamer;
 	ContourFinding contourFinder;
-	CenterFinding centerFinder;
+	CenterFinding centerFinder(3);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
