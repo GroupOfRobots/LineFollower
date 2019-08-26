@@ -69,6 +69,7 @@ int main()
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
+	streamer.run();
 	while(1){
 		streamer.waitForClient();
 
