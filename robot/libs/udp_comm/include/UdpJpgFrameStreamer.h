@@ -25,7 +25,7 @@ class UdpJpgFrameStreamer {
 		frames_circular_buffer frames_buffer;
 		
 	public:
-		UdpJpgFrameStreamer(int port=2024, int dataSize = 64000, int jpegCompressionLevel = 80, int bufferSize = 20);
+		UdpJpgFrameStreamer(int port=2024, int dataSize = 64000, int jpegCompressionLevel = 80, int bufferSize = 1);
 		void waitForClient();
 		void run();
 		void runStream();

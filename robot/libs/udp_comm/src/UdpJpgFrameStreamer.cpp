@@ -8,6 +8,7 @@ UdpJpgFrameStreamer::UdpJpgFrameStreamer(int port, int dataSize, int jpegCompres
 	compression_params.push_back(1);//CV_IMWRITE_JPEG_QUALITY
 	compression_params.push_back(jpegCompressionLevel);
 	frames_buffer.resize(bufferSize);
+	frames_buffer.clear();
 }
 
 void UdpJpgFrameStreamer::waitForClient(){
@@ -31,7 +32,8 @@ void UdpJpgFrameStreamer::run(){
 
 void UdpJpgFrameStreamer::runStream(){
 	while(1){
-		if(!frames_buffer.empty() && (frames_buffer[0].empty() || frames_buffer[0].rows==-1 || frames_buffer[0].cols==-1)){
+		cout<<"a"<<endl;
+		if(!frames_buffer.empty()){
 			Mat frame = frames_buffer[0];
 			uploadFrame(frame);
 			frames_buffer.pop_front();

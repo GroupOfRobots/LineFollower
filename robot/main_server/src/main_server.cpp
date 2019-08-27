@@ -62,7 +62,7 @@ int main()
 //	stepperTest();
 	//-----------------------------------------------------
 
-	UdpJpgFrameStreamer streamer;
+	UdpJpgFrameStreamer streamer(2024, 64000, 80, 100);
 	ContourFinding contourFinder;
 	CenterFinding centerFinder(3);
 	Mat src;
