@@ -42,30 +42,13 @@ int main(int argc, char* argv[])
     udp::endpoint sender_endpoint;
     std::size_t bytesReceived =1;
 
-    auto start = chrono::steady_clock::now();
-    
-    int first = 1;
     while(bytesReceived != 0){ 
+      auto start = chrono::steady_clock::now();
       socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);     
       bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-      
-      const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-			// Get the time offset in current day
-    	const boost::posix_time::time_duration td = now.time_of_day();
-			const long hours = td.hours();
-    	const long minutes = td.minutes();
-    	const long seconds = td.seconds();
-    	const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
-			char buf[40];
-    	sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
-    	cout<<"Receive time: "<<buf<<endl;
-
-      if(first == 1){
-        auto end = chrono::steady_clock::now();
-        first = 0;
-        cout << "Transfer time in microseconds: " << chrono::duration_cast<chrono::milliseconds>(end - start).count()/2
-				<< " ms" << endl;
-      }
+      auto end = chrono::steady_clock::now();
+		  cout << "Communication time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+		  << " µs" << endl;
 
       //std::cout.write(recv_buf.data(), bytesReceived);
       if(recv_buf.empty()){std::cerr << "Buf is empty, got " <<bytesReceived << "bytes"<< std::endl;}

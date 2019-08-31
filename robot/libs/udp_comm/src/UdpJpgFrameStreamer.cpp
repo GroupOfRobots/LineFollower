@@ -50,17 +50,20 @@ void UdpJpgFrameStreamer::pushFrame(Mat frame){
 }
 
 void UdpJpgFrameStreamer::uploadFrame(){
-	waitForClient();
 	std::vector<uchar> buffer;
 	mtx.lock();
     imencode(".jpg", frame_to_send, buffer, compression_params);//czwarty parametr to kompresja obrazku
 	mtx.unlock();
-    //std::cerr << buffer.size()<<endl;
 	boost::system::error_code ignored_error;
     string chunk=string(buffer.begin(),buffer.end());
 	
 	try{
+		auto start = chrono::steady_clock::now();
+		waitForClient();
 	    socket->send_to(boost::asio::buffer(chunk),remote_endpoint, 0, ignored_error);
+		auto end = chrono::steady_clock::now();
+		cout << "Communication time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+		<< " µs" << endl;
 	}
 
 	catch (std::exception& e)
