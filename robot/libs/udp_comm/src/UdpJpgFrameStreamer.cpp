@@ -30,6 +30,10 @@ void UdpJpgFrameStreamer::run(){
 
 void UdpJpgFrameStreamer::runStream(){
 	while(1){
+<<<<<<< HEAD
+=======
+		std::cout<<"no nie"<<endl;
+>>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
 		if(ready_to_send){
 			uploadFrame();
 			ready_to_send = false;

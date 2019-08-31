@@ -69,13 +69,18 @@ int main()
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
+<<<<<<< HEAD
 	streamer.run();
 	while(1){
 		//streamer.waitForClient();
+=======
+	//streamer.waitForClient();
+>>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
 
-		//odnośnik do kamery
-		VideoCapture clipCapture(0);
+	//odnośnik do kamery
+	VideoCapture clipCapture(0);
 
+<<<<<<< HEAD
 	   	//sprawdzenie czy wczytano poprawnie
 	    if (!clipCapture.isOpened())
 	    {
@@ -83,6 +88,17 @@ int main()
 	  		break;
 	    }
     
+=======
+	//sprawdzenie czy wczytano poprawnie
+	if (!clipCapture.isOpened())
+	{
+	  	cout  << "Could not open reference to clip" << endl;
+		exit(0);
+	}
+	
+	streamer.run();
+	while(1){
+>>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
 		clipCapture.read(src);
 			
 		if (src.empty() || src.cols == -1 || src.rows == -1)
