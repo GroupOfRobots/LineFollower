@@ -1,14 +1,12 @@
 #include "UdpJpgFrameStreamer.h"
 
-UdpJpgFrameStreamer::UdpJpgFrameStreamer(int port, int dataSize, int jpegCompressionLevel, int bufferSize){
+UdpJpgFrameStreamer::UdpJpgFrameStreamer(int port, int dataSize, int jpegCompressionLevel){
 	this->dataSize = dataSize;
 	this->port = port;
-	this->bufferSize = bufferSize;
 	socket = new udp::socket(io_service, udp::endpoint(udp::v4(), port));
 	compression_params.push_back(1);//CV_IMWRITE_JPEG_QUALITY
 	compression_params.push_back(jpegCompressionLevel);
-	frames_buffer.resize(bufferSize);
-	frames_buffer.clear();
+	ready_to_send = false;
 }
 
 void UdpJpgFrameStreamer::waitForClient(){
@@ -32,22 +30,22 @@ void UdpJpgFrameStreamer::run(){
 
 void UdpJpgFrameStreamer::runStream(){
 	while(1){
-		cout<<"a"<<endl;
-		if(!frames_buffer.empty()){
-			Mat frame = frames_buffer[0];
-			uploadFrame(frame);
-			frames_buffer.pop_front();
+		if(ready_to_send){
+			uploadFrame();
+			ready_to_send = false;
 		}
 	}
 }
 
 void UdpJpgFrameStreamer::pushFrame(Mat frame){
-	frames_buffer.push_back(frame);
+	frame_to_send = frame;
+	ready_to_send = true;
 }
 
-void UdpJpgFrameStreamer::uploadFrame(Mat frame){
+void UdpJpgFrameStreamer::uploadFrame(){
+	waitForClient();
 	std::vector<uchar> buffer;
-    imencode(".jpg", frame, buffer, compression_params);//czwarty parametr to kompresja obrazku
+    imencode(".jpg", frame_to_send, buffer, compression_params);//czwarty parametr to kompresja obrazku
     //std::cerr << buffer.size()<<endl;
 	boost::system::error_code ignored_error;
     string chunk=string(buffer.begin(),buffer.end());

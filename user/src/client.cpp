@@ -43,10 +43,10 @@ int main(int argc, char* argv[])
     std::size_t bytesReceived =1;
 
     auto start = chrono::steady_clock::now();
-    socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
     
     int first = 1;
-    while(bytesReceived != 0){      
+    while(bytesReceived != 0){ 
+      socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);     
       bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
       
       const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
