@@ -62,37 +62,37 @@ int main()
 //	stepperTest();
 	//-----------------------------------------------------
 
-	UdpJpgFrameStreamer streamer(2024, 64000, 80, 100);
+	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder;
 	CenterFinding centerFinder(3);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
+	//streamer.waitForClient();
+
+	//odnośnik do kamery
+	VideoCapture clipCapture(0);
+
+	//sprawdzenie czy wczytano poprawnie
+	if (!clipCapture.isOpened())
+	{
+	  	cout  << "Could not open reference to clip" << endl;
+		exit(0);
+	}
+	
 	streamer.run();
 	while(1){
-		streamer.waitForClient();
-
-		//odnośnik do kamery
-		VideoCapture clipCapture(0);
-
-	   	//sprawdzenie czy wczytano poprawnie
-	    if (!clipCapture.isOpened())
-	    {
-	  		cout  << "Could not open reference to clip" << endl;
-	  		break;
-	    }
-    
-		while(1){
-
-			clipCapture.read(src);
+		clipCapture.read(src);
 			
-		    	if (src.empty() || src.cols == -1 || src.rows == -1)
-		    	{
-		    	    printf("No image data from clip\n");
-		    	    break;
-		    	}
-			
+		if (src.empty() || src.cols == -1 || src.rows == -1)
+		{
+		    	printf("No image data from clip\n");
+		    	break;
+		}
+
+		else
+		{	
 			if(method == 1)
 			{
 				contourFinder.setFrame(src);
@@ -142,9 +142,8 @@ int main()
 			}
      	}
 
-		clipCapture.release();
-		break;
-   
+		//clipCapture.release();
+		//break;
 	}
 
   return 0;
