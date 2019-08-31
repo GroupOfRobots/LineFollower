@@ -69,26 +69,11 @@ int main()
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
-<<<<<<< HEAD
-	streamer.run();
-	while(1){
-		//streamer.waitForClient();
-=======
 	//streamer.waitForClient();
->>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
 
 	//odnośnik do kamery
 	VideoCapture clipCapture(0);
 
-<<<<<<< HEAD
-	   	//sprawdzenie czy wczytano poprawnie
-	    if (!clipCapture.isOpened())
-	    {
-	  		cout  << "Could not open reference to clip" << endl;
-	  		break;
-	    }
-    
-=======
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
 	{
@@ -98,7 +83,6 @@ int main()
 	
 	streamer.run();
 	while(1){
->>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
 		clipCapture.read(src);
 			
 		if (src.empty() || src.cols == -1 || src.rows == -1)
@@ -117,8 +101,8 @@ int main()
 				auto start = chrono::steady_clock::now(); 
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				auto end = chrono::steady_clock::now();
-				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-				<< " µs" << endl;
+				//cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+				//<< " µs" << endl;
 				Mat frame = contourFinder.drawPoints(centers);
 				const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
 				// Get the time offset in current day
@@ -129,7 +113,7 @@ int main()
     			const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
 				char buf[40];
     			sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
-    			cout<<"Send time in microseconds: "<<buf<<endl;
+    			//cout<<"Send time in microseconds: "<<buf<<endl;
 				streamer.pushFrame(frame);
 			}
 
@@ -141,8 +125,8 @@ int main()
 				auto start = chrono::steady_clock::now();
 				std::vector<cv::Point> centers = centerFinder.findLineCenters();
 				auto end = chrono::steady_clock::now();
-				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-				<< " µs" << endl;
+				//cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
+				//<< " µs" << endl;
 				Mat frame  = centerFinder.drawPoints(centers);
 				const boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
 				// Get the time offset in current day
@@ -153,7 +137,7 @@ int main()
     			const long milliseconds = td.total_milliseconds() - ((hours * 3600 + minutes * 60 + seconds) * 1000);
 				char buf[40];
     			sprintf(buf, "%02ld:%02ld:%02ld.%03ld", hours, minutes, seconds, milliseconds);
-    			cout<<"Send time: "<<buf<<endl;
+    			//cout<<"Send time: "<<buf<<endl;
 				streamer.pushFrame(frame);
 			}
      	}

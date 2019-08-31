@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <thread>
+#include <mutex>
 using namespace cv;
 using namespace std;
 using boost::asio::ip::udp;
@@ -20,6 +21,7 @@ class UdpJpgFrameStreamer {
 		vector<int> compression_params;
 		Mat frame_to_send;
 		bool ready_to_send;
+		std::mutex mtx; 
 
 		void waitForClient();
 		void runStream();

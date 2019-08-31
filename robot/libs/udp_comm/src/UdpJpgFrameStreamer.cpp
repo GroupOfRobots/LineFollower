@@ -30,26 +30,31 @@ void UdpJpgFrameStreamer::run(){
 
 void UdpJpgFrameStreamer::runStream(){
 	while(1){
-<<<<<<< HEAD
-=======
-		std::cout<<"no nie"<<endl;
->>>>>>> e8d59f3aecf61870853bc05fbf8b998b1ce0ca14
+		
 		if(ready_to_send){
 			uploadFrame();
+			mtx.lock();
 			ready_to_send = false;
+			mtx.unlock();
 		}
+		//bez tego nie dziala
+		std::this_thread::sleep_for(std::chrono::microseconds(1));
 	}
 }
 
 void UdpJpgFrameStreamer::pushFrame(Mat frame){
+	mtx.lock();
 	frame_to_send = frame;
 	ready_to_send = true;
+	mtx.unlock();
 }
 
 void UdpJpgFrameStreamer::uploadFrame(){
 	waitForClient();
 	std::vector<uchar> buffer;
+	mtx.lock();
     imencode(".jpg", frame_to_send, buffer, compression_params);//czwarty parametr to kompresja obrazku
+	mtx.unlock();
     //std::cerr << buffer.size()<<endl;
 	boost::system::error_code ignored_error;
     string chunk=string(buffer.begin(),buffer.end());
