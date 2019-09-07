@@ -7,9 +7,6 @@ UdpJpgFrameStreamer::UdpJpgFrameStreamer(int port, int dataSize, int jpegCompres
 	compression_params.push_back(1);//CV_IMWRITE_JPEG_QUALITY
 	compression_params.push_back(jpegCompressionLevel);
 	ready_to_send = false;
-	counter = 0;
-	total_comm_time = 0;
-	max_counter = 1000;
 }
 
 void UdpJpgFrameStreamer::waitForClient(){
@@ -61,20 +58,8 @@ void UdpJpgFrameStreamer::uploadFrame(){
     string chunk=string(buffer.begin(),buffer.end());
 	
 	try{
-		auto start = chrono::steady_clock::now();
 		waitForClient();
 	    socket->send_to(boost::asio::buffer(chunk),remote_endpoint, 0, ignored_error);
-		auto end = chrono::steady_clock::now();
-		total_comm_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-		++counter;
-
-		if(counter == max_counter){
-			cout << "Communication time in microseconds: " << total_comm_time/max_counter << " µs" << endl;
-			counter = 0;
-			total_comm_time = 0;
-		}
-	
-
 	}
 
 	catch (std::exception& e)

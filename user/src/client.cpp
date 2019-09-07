@@ -42,44 +42,18 @@ int main(int argc, char* argv[])
     udp::endpoint sender_endpoint;
     std::size_t bytesReceived =1;
 
-    int counter = 0;
-	  double total_comm_time = 0;
-    double total_preproc_and_disp_time = 0;
-    double total_bytes = 0;
-	  int max_counter = 1000;
-
     while(bytesReceived != 0){ 
-      auto start = chrono::steady_clock::now();
       socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);     
       bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-      auto end = chrono::steady_clock::now();
-      total_comm_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-      total_bytes += bytesReceived;
 
-      start = chrono::steady_clock::now();
       //std::cout.write(recv_buf.data(), bytesReceived);
       if(recv_buf.empty()){std::cerr << "Buf is empty, got " <<bytesReceived << "bytes"<< std::endl;}
       std:vector<char> data(recv_buf.begin(), recv_buf.end());
       dst=imdecode(data,1);
 	    resize(dst, dst, Size(0,0), scaleFactor, scaleFactor, 1);
       display_dst(27,"Received");
-      end = chrono::steady_clock::now();
-      total_preproc_and_disp_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-
-      ++counter;
-
-      if(counter == max_counter){
-		    cout << "Communication time in microseconds: "<<total_comm_time/max_counter<<" µs" << endl;
-        cout << "Preproc and disp time in microseconds: "<<total_preproc_and_disp_time/max_counter<<" µs" << endl;
-        cout << "Avg bytes received: "<<total_bytes/max_counter<<" bytes" << endl;
-        counter = 0;
-				total_comm_time = 0;
-        total_preproc_and_disp_time = 0;
-        total_bytes = 0;
-      }
-
-	
 	}
+
 	destroyAllWindows();
     
 
