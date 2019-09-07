@@ -111,6 +111,7 @@ int main()
 				Mat frame = contourFinder.drawPoints(centers);
 				end = chrono::steady_clock::now();
 				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+				++counter;
 
 				if(counter == max_counter){
 					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
@@ -137,6 +138,7 @@ int main()
 				Mat frame  = centerFinder.drawPoints(centers);
 				end = chrono::steady_clock::now();
 				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+				++counter;
 
 				if(counter == max_counter){
 					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
@@ -150,7 +152,6 @@ int main()
 			}
      	}
 
-		counter += 1;
 
 		//clipCapture.release();
 		//break;

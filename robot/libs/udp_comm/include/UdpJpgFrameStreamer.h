@@ -22,6 +22,9 @@ class UdpJpgFrameStreamer {
 		Mat frame_to_send;
 		bool ready_to_send;
 		std::mutex mtx; 
+		int counter;
+		double total_comm_time;
+		int max_counter;
 
 		void waitForClient();
 		void runStream();
