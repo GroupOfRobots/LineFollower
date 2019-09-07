@@ -62,6 +62,10 @@ int main()
 //	stepperTest();
 	//-----------------------------------------------------
 
+	int counter = 0;
+	double total_center_time = 0;
+	double total_drawing_time = 0;
+	int max_counter = 1000;
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder;
 	CenterFinding centerFinder(3);
@@ -97,12 +101,25 @@ int main()
 			{
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(0.3);//default is 0.5
+
 				auto start = chrono::steady_clock::now(); 
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				auto end = chrono::steady_clock::now();
-				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-				<< " µs" << endl;
+				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				start = chrono::steady_clock::now();
 				Mat frame = contourFinder.drawPoints(centers);
+				end = chrono::steady_clock::now();
+				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				if(counter == max_counter){
+					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
+					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
+					counter = 0;
+					total_drawing_time = 0;
+					total_center_time = 0;
+				}
+
 				streamer.pushFrame(frame);
 			}
 
@@ -114,12 +131,26 @@ int main()
 				auto start = chrono::steady_clock::now();
 				std::vector<cv::Point> centers = centerFinder.findLineCenters();
 				auto end = chrono::steady_clock::now();
-				cout << "Center finding time in microseconds: " << chrono::duration_cast<chrono::microseconds>(end - start).count()
-				<< " µs" << endl;
+				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				start = chrono::steady_clock::now();
 				Mat frame  = centerFinder.drawPoints(centers);
+				end = chrono::steady_clock::now();
+				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				if(counter == max_counter){
+					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
+					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
+					counter = 0;
+					total_drawing_time = 0;
+					total_center_time = 0;
+				}
+
 				streamer.pushFrame(frame);
 			}
      	}
+
+		counter += 1;
 
 		//clipCapture.release();
 		//break;
