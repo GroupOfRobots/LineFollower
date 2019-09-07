@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
     int counter = 0;
 	  double total_comm_time = 0;
     double total_preproc_and_disp_time = 0;
+    double total_bytes = 0;
 	  int max_counter = 1000;
 
     while(bytesReceived != 0){ 
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
       bytesReceived= socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
       auto end = chrono::steady_clock::now();
       total_comm_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+      total_bytes += bytesReceived;
 
       start = chrono::steady_clock::now();
       //std::cout.write(recv_buf.data(), bytesReceived);
@@ -69,9 +71,11 @@ int main(int argc, char* argv[])
       if(counter == max_counter){
 		    cout << "Communication time in microseconds: "<<total_comm_time/max_counter<<" µs" << endl;
         cout << "Preproc and disp time in microseconds: "<<total_preproc_and_disp_time/max_counter<<" µs" << endl;
+        cout << "Avg bytes received: "<<total_bytes/max_counter<<" bytes" << endl;
         counter = 0;
 				total_comm_time = 0;
         total_preproc_and_disp_time = 0;
+        total_bytes = 0;
       }
 
 	
