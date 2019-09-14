@@ -84,14 +84,14 @@ vector<Point> ContourFinding::findCenters(){
 	vector<vector<Point>> contours;
     	vector<Vec4i> hierarchy;
 
-	double largest_area;
-	int largest_contour_index;
+	double largest_area = 0;
+	int largest_contour_index = 0;
 
 	//znalezienie konturów (najbardziej zewnętrznych)
 	findContours(outputFrame, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);    
 
 	//jeśli znaleziono jakiś kontur
-	if(contours.size()>0) {
+	if(!contours.empty()) {
 		//szukanie największego konturu
 		for( int i = 0; i< contours.size(); i++ ){
        			double a=contourArea(contours[i],false);
@@ -99,13 +99,14 @@ vector<Point> ContourFinding::findCenters(){
 				{
        				largest_area=a;
        				largest_contour_index=i;
+       				std::cout<<"i: "<<i<<endl;
        			}
     		}
 
+		std::cout<<"id: "<<largest_contour_index<<endl;
 		vector<Point> contour = contours[largest_contour_index];
 		this->contour=contour;
 		this->hierarchy = hierarchy;
-
 		//wyliczenie momentów figury
 		Moments mu = moments(contours[largest_contour_index], false);
 
@@ -144,21 +145,21 @@ vector<Point> ContourFinding::findLineCenters(){
 Mat ContourFinding::drawPoints(vector<Point> centers){
 	Mat frame = sourceFrame.clone();
 	vector<vector<Point>> contours;
+	vector<Point> contour;
 
 	//rysowanie wykrytych środków ciężkosci linii i konturów
 	Scalar color(0, 0, 255);
     Scalar colorContour(0, 255, 0);
 	
 	//przesunięcie konturu
-	for( int i = 0; i< contour.size(); i++ )
+	for( int i = 0; i< this->contour.size(); i++ )
     {
-        contour[i]+=pointToStartCutting;
+        contour.push_back(this->contour[i] + pointToStartCutting);
     }
 	
 	contours.push_back(contour);
-
 	//rysowanie konturu
-	if (contours.size() == 0) {
+	if (contour.size() != 0) {
 		drawContours(frame, contours, 0, color, 2, 8);
 	}
 
@@ -166,14 +167,18 @@ Mat ContourFinding::drawPoints(vector<Point> centers){
 	rectangle( frame, pointToStartCutting, pointToFinishCutting, colorContour, 0, 8 );
 
 	//rysowanie środka ciężkosci konturu
-	for(int i=0;i<centers.size();i++)
+	if(!centers.empty())
 	{
-    	//rysowanie wykrytego środka ciężkosci figury
-    	circle(frame, centers[i]+pointToStartCutting, 5, color, -1, 8);
-    }
+		for(int i=0;i<centers.size();i++)
+		{
+			//rysowanie wykrytego środka ciężkosci figury
+			circle(frame, centers[i]+pointToStartCutting, 5, color, -1, 8);
+		}
+		
+		//rysowanie linii
+		line(frame, Point(centers[0].x,0), Point(centers[0].x, frame.rows), color,2);
 
-	//rysowanie linii
-	line(frame, Point(centers[0].x,0), Point(centers[0].x, frame.rows), color,2);
+	}
 
 	return frame;
 }

@@ -102,12 +102,14 @@ int main()
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(0.3);//default is 0.5
 
-				auto start = chrono::steady_clock::now(); 
+				auto start = chrono::steady_clock::now();
+				cout<<"finding"<<endl; 
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				auto end = chrono::steady_clock::now();
 				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
 
 				start = chrono::steady_clock::now();
+				cout<<"drawing"<<endl;
 				Mat frame = contourFinder.drawPoints(centers);
 				end = chrono::steady_clock::now();
 				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
