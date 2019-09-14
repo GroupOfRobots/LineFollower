@@ -93,17 +93,15 @@ vector<Point> ContourFinding::findCenters(){
 	//jeśli znaleziono jakiś kontur
 	if(!contours.empty()) {
 		//szukanie największego konturu
-		for( int i = 0; i< contours.size(); i++ ){
+		for( int i = 0; i< contours.size(); i++){
        			double a=contourArea(contours[i],false);
        			if(a>largest_area)
 				{
        				largest_area=a;
        				largest_contour_index=i;
-       				std::cout<<"i: "<<i<<endl;
        			}
     		}
 
-		std::cout<<"id: "<<largest_contour_index<<endl;
 		vector<Point> contour = contours[largest_contour_index];
 		this->contour=contour;
 		this->hierarchy = hierarchy;
