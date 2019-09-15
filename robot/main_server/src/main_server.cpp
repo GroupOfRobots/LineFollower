@@ -67,7 +67,7 @@ int main()
 	double total_drawing_time = 0;
 	int max_counter = 1000;
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder;
+	ContourFinding contourFinder(0, 1);
 	CenterFinding centerFinder(3);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";

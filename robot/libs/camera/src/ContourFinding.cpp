@@ -1,12 +1,19 @@
 #include "ContourFinding.h"
 
-ContourFinding::ContourFinding(){}
+ContourFinding::ContourFinding(double pointFactorToStartCutting, double pointFactorToFinishCutting){
+	this->pointFactorToStartCutting = pointFactorToStartCutting;
+	this->pointFactorToFinishCutting = pointFactorToFinishCutting;
+	pointToStartCutting = Point(0,outputFrame.rows*pointFactorToStartCutting);
+	pointToFinishCutting = Point(outputFrame.cols, outputFrame.rows*pointFactorToFinishCutting);
+}
 
-ContourFinding::ContourFinding(Mat frame){
+ContourFinding::ContourFinding(Mat frame, double pointFactorToStartCutting, double pointFactorToFinishCutting){
 	sourceFrame = frame;
 	outputFrame = frame;
-	pointToStartCutting = Point(0,outputFrame.rows/3);
-	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);
+	this->pointFactorToStartCutting = pointFactorToStartCutting;
+	this->pointFactorToFinishCutting = pointFactorToFinishCutting;
+	pointToStartCutting = Point(0,outputFrame.rows*pointFactorToStartCutting);
+	pointToFinishCutting = Point(outputFrame.cols, outputFrame.rows*pointFactorToFinishCutting);
 }
 
 void ContourFinding::setFrame(Mat frame){
@@ -14,8 +21,8 @@ void ContourFinding::setFrame(Mat frame){
 	outputFrame = frame;
 	contour.erase(contour.begin(),contour.end());
 	hierarchy.erase(hierarchy.begin(),hierarchy.end());
-	pointToStartCutting = Point(0,outputFrame.rows/3);
-	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);
+	pointToStartCutting = Point(0,outputFrame.rows*pointFactorToStartCutting);
+	pointToFinishCutting = Point(outputFrame.cols, outputFrame.rows*pointFactorToFinishCutting);
 }
 
 Mat ContourFinding::getSourceFrame(){
@@ -24,19 +31,6 @@ Mat ContourFinding::getSourceFrame(){
 
 Mat ContourFinding::getOutputFrame(){
 	return outputFrame;
-}
-
-Point ContourFinding::getStartPointToApproachCutting(){
-	return pointToStartCutting;
-}
-
-Point ContourFinding::getEndPointToApproachCutting(){
-	return pointToFinishCutting;
-}
-
-void ContourFinding::setPointsToApproachCutting(Point startPoint, Point endPoint){
-	pointToStartCutting = startPoint;
-	pointToFinishCutting = endPoint;
 }
 
 void ContourFinding::setScaleFactor(double scaleFactor){
@@ -51,8 +45,8 @@ double ContourFinding::getScaleFactor(){
 void ContourFinding::scaleImage(){
 	resize(outputFrame, outputFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
 	resize(sourceFrame, sourceFrame, Size(0,0), scaleFactor, scaleFactor, 2); //2->INTER_AREA_INTERPOLATION
-	pointToStartCutting = Point(0,outputFrame.rows/3);
-	pointToFinishCutting = Point(outputFrame.cols, 2*(outputFrame.rows)/3);	
+	pointToStartCutting = Point(0,outputFrame.rows*pointFactorToStartCutting);
+	pointToFinishCutting = Point(outputFrame.cols, outputFrame.rows*pointFactorToFinishCutting);	
 }
 
 void ContourFinding::cutImage(){

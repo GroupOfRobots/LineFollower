@@ -10,6 +10,8 @@ using namespace std;
 
 class ContourFinding{
 	private:
+		double pointFactorToStartCutting;
+		double pointFactorToFinishCutting;
 		Point pointToStartCutting;
 		Point pointToFinishCutting;
 		Mat sourceFrame;
@@ -30,12 +32,9 @@ class ContourFinding{
 		vector<Point> findCenters();
 		
 	public:
-		ContourFinding();
-		ContourFinding(Mat frame);
+		ContourFinding(double pointFactorToStartCutting, double pointFactorToFinishCutting);
+		ContourFinding(Mat frame, double pointFactorToStartCutting, double pointFactorToFinishCutting);
 		void setFrame(Mat frame);
-		void setPointsToApproachCutting(Point startPoint, Point endPoint);
-		Point getStartPointToApproachCutting();
-		Point getEndPointToApproachCutting();
 		void setScaleFactor(double scaleFactor);
 		double getScaleFactor();
 		Mat getSourceFrame();

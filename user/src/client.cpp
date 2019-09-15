@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 using boost::asio::ip::udp;
 
-double scaleFactor = 2;
+double scaleFactor = 1;
 int DELAY_CAPTION = 1500;
 int DELAY_BLUR = 100;
 int MAX_KERNEL_LENGTH = 31;
