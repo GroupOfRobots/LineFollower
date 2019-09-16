@@ -57,6 +57,7 @@ void ContourFinding::cutImage(){
 void ContourFinding::toGrayScale(){
 	cvtColor(outputFrame, outputFrame, cv::COLOR_RGB2GRAY);
 }
+
 void ContourFinding::useBlur(){
 	medianBlur (outputFrame, outputFrame, max_kernel_length);
 }
