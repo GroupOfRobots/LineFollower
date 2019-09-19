@@ -67,8 +67,8 @@ int main()
 	double total_drawing_time = 0;
 	int max_counter = 1000;
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder(0, 1);
-	CenterFinding centerFinder(3);
+	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
+	CenterFinding centerFinder(6);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
@@ -127,7 +127,7 @@ int main()
 			else
 			{
 				centerFinder.setFrame(src);
-				centerFinder.setScaleFactor(0.3);//default is 0.5
+				centerFinder.setScaleFactor(0.5);//default is 0.5
 
 				auto start = chrono::steady_clock::now();
 				std::vector<cv::Point> centers = centerFinder.findLineCenters();

@@ -87,11 +87,12 @@ vector<Point> CenterFinding::findCenters(){
 	int center = 0;
 	int whitePixelCounter = 0;
 
-	for(int i = spaceWidth; i < outputFrame.rows; i+=spaceWidth)
+	for(int i = 1; i <= numOfPoints; i++)
 	{
+		int row = i*spaceWidth;
 		for(int j = 0; j < outputFrame.cols; j++)
 		{
-			if(int(outputFrame.at<uchar>(i,j)) == 255)
+			if(int(outputFrame.at<uchar>(row,j)) == 255)
 			{
 				sum+=j;
 				whitePixelCounter++;
@@ -101,7 +102,7 @@ vector<Point> CenterFinding::findCenters(){
 		if(whitePixelCounter != 0)
 		{
 			center = sum/whitePixelCounter;
-			centers.push_back(Point(center,i));
+			centers.push_back(Point(center,row));
 		}
 	
 		sum=0;
