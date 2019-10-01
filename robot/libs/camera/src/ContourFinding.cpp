@@ -83,7 +83,7 @@ vector<Point> ContourFinding::findCenters(){
 	int largest_contour_index = 0;
 
 	//znalezienie konturów (najbardziej zewnętrznych)
-	findContours(outputFrame, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_NONE);    
+	findContours(outputFrame, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);    
 
 	//jeśli znaleziono jakiś kontur
 	if(!contours.empty()) {
