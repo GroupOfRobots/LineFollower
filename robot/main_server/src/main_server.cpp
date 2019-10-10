@@ -108,7 +108,8 @@ int main()
 				int center = round(contourFinder.getSourceFrame().cols/2);
 				Pid pid(1, 10000, 0, 0.1, center, 20, 0, 40);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
-				board.setSpeed(p.first, p.second);
+				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
+				board.setSpeed(-p.first, -p.second);
 			}
 
 			else
