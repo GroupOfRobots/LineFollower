@@ -20,6 +20,7 @@
 #include "UdpJpgFrameStreamer.h"
 #include "ContourFinding.h"
 #include "CenterFinding.h"
+#include "Pid.h"
 using namespace cv;
 using namespace std;
 
@@ -102,7 +103,12 @@ int main()
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
-				board.setSpeed(20,20);
+
+				//pid
+				int center = round(contourFinder.getSourceFrame().cols/2);
+				Pid pid(1, 10000, 0, 0.1, center, 20, 0, 40);
+				pair<int, int> p = pid.calculateControl(centers[0].x);
+				board.setSpeed(p.first, p.second);
 			}
 
 			else
