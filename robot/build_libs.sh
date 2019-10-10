@@ -13,3 +13,4 @@ build_motors () (
 build_motors "camera"
 build_motors "udp_comm"
 build_motors "motors"
+build_motors "pid"
