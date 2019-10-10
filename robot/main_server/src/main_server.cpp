@@ -16,6 +16,7 @@
 #include <boost/asio.hpp>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include <thread>
 #include "UdpJpgFrameStreamer.h"
 #include "ContourFinding.h"
 #include "CenterFinding.h"
@@ -52,17 +53,19 @@ void sigintHandler(int signum) {
 
 int main()
 {
+	//setup motors
 	signal(SIGINT, sigintHandler);
-
 	if (bcm2835_init() == 0) {
 			fprintf(stderr, "Not able to init the bmc2835 library\n");
 			return -1;
 	}
-
-	stepperTest();
+	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
+	globalBoard = &board;
+	board.setUp();
+	board.resetPosition();
 	//-----------------------------------------------------
 
-	int counter = 0;
+	//setup camera
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
 	CenterFinding centerFinder(6);
@@ -70,19 +73,17 @@ int main()
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
-	//streamer.waitForClient();
-
-	//odnośnik do kamery
 	VideoCapture clipCapture(0);
-
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
 	{
 	  	cout  << "Could not open reference to clip" << endl;
 		exit(0);
 	}
-	
 	streamer.run();
+	//-----------------------------------------------------
+
+	//main loop
 	while(1){
 		clipCapture.read(src);
 			
@@ -101,6 +102,7 @@ int main()
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
+				board.setSpeed(20,20);
 			}
 
 			else
@@ -112,7 +114,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
 		//clipCapture.release();
 		//break;
