@@ -40,13 +40,13 @@ using boost::asio::ip::udp;
 void stepperTest();
 Motors *globalBoard;
 uint16_t measurement[10];
-std::ofstream file;
 
 void sigintHandler(int signum) {
 	if (signum == SIGINT) {
 		//globalBoard->Dump();
-		file.close();
 		globalBoard->stop();
+		std::cout<<"TASK TERMINATED"<<endl;
+		exit(signum);
 	}
 }
 
@@ -114,7 +114,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 		//clipCapture.release();
 		//break;
@@ -137,7 +137,5 @@ void stepperTest(){
 	positionLeft = board.getPositionLeft();
 	positionRight = board.getPositionRight();
 	printf("Absolute position: Left:%lu		Right:%lu \n",positionLeft, positionRight);
-	file <<"end_left:"<< positionLeft <<"end_right:"<< positionRight<<std::endl;
 	board.stop();
-	file.close();
 }
