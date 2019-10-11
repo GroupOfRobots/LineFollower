@@ -68,7 +68,7 @@ int main()
 
 	//setup camera
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
+	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
@@ -99,17 +99,18 @@ int main()
 			if(method == 1)
 			{
 				contourFinder.setFrame(src);
-				contourFinder.setScaleFactor(0.3);//default is 0.5
-				contourFinder.setThreshold(50);
+				contourFinder.setScaleFactor(0.5);//default is 0.5
+				contourFinder.setThreshold(70);
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
 
 				//pid
 				int center = round(contourFinder.getSourceFrame().cols/2);
-				Pid pid(1, 10000, 0, 0.1, center, 20, 0, 40);
+				Pid pid(0.5, 10000, 0, 0.1, center, 30, -25, 25);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
 				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
+				std::cout<<"Error: "<<center - centers[0].x<<std::endl;
 				board.setSpeed(-p.first, -p.second);
 			}
 
@@ -122,7 +123,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
 		//clipCapture.release();
 		//break;
