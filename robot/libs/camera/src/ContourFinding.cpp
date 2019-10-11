@@ -70,8 +70,12 @@ void ContourFinding::dilateFrame(Mat element){
 	dilate(outputFrame, outputFrame, element);
 }
 
+void ContourFinding::setThreshold(int threshold){
+	this->binarize_threshold = threshold;
+}
+
 void ContourFinding::thresholdFrame(){
-	threshold(outputFrame, outputFrame, 127, 255, THRESH_BINARY_INV);
+	threshold(outputFrame, outputFrame, binarize_threshold, 255, THRESH_BINARY_INV);
 }
 
 vector<Point> ContourFinding::findCenters(){
