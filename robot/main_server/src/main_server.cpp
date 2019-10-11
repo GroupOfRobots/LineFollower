@@ -100,6 +100,7 @@ int main()
 			{
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(0.3);//default is 0.5
+				contourFinder.setThreshold(50);
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
