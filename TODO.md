@@ -8,10 +8,15 @@
     https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html
     Otsu's Binarization
     
-3. Dowiedzieć się jak działa wykrywanie konturu w open cv, móc opisać jego działanie.
-4. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia
-5. Rozwiązać problem zakrętów
-6. Regulacja, sprawdzic czy prędkość oddalania się centrum linii od środka obrazu nie jest lepszym wejściem dla regulatora niż odległosć od środka obrazu
+3. Usuwanie odblasków
+    http://www.amphident.de/en/blog/preprocessing-for-automatic-pattern-identification-in-wildlife-removing-glare.html
+
+    NIE DZIAŁA I NIE ROBIĆ
+
+4. Dowiedzieć się jak działa wykrywanie konturu w open cv, móc opisać jego działanie.
+5. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia
+6. Rozwiązać problem zakrętów
+7. Regulacja, sprawdzic czy prędkość oddalania się centrum linii od środka obrazu nie jest lepszym wejściem dla regulatora niż odległosć od środka obrazu
   
 
 
