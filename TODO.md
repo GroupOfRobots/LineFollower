@@ -7,6 +7,8 @@
 2. Zrobić automatyczne dobieranie progu przy binaryzacji.
     https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html
     Otsu's Binarization
+	Problem jak robot nie widzi linii, wtedy i tak myśli ze widzii.
+	Wystarczy w takim razie dobrać próg ręcznie, musi być odpowiednio mały aby cień nie był wykrywany.
     
 3. Usuwanie odblasków
     http://www.amphident.de/en/blog/preprocessing-for-automatic-pattern-identification-in-wildlife-removing-glare.html
