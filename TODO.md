@@ -16,8 +16,10 @@
     NIE DZIAŁA I NIE ROBIĆ
 
 4. Dowiedzieć się jak działa wykrywanie konturu w open cv, móc opisać jego działanie.
+	Można spytać Słonia
 5. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia
 6. Rozwiązać problem zakrętów
+	Można spytać Słonia o monenty w konturze
 7. Regulacja, sprawdzic czy prędkość oddalania się centrum linii od środka obrazu nie jest lepszym wejściem dla regulatora niż odległosć od środka obrazu
   
 
