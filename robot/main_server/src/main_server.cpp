@@ -71,6 +71,8 @@ int main()
 	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
 	Mat src;
+	double regulation_period = 100;
+	double duration;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
@@ -98,20 +100,24 @@ int main()
 		{	
 			if(method == 1)
 			{
+				auto start = chrono::steady_clock::now();
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(0.5);//default is 0.5
-				contourFinder.setThreshold(70);
+				contourFinder.setThreshold(50);
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
 
 				//pid
 				int center = round(contourFinder.getSourceFrame().cols/2);
-				Pid pid(0.5, 10000, 0, 0.1, center, 30, -25, 25);
+				Pid pid(0.3, 10000, 0, 0.1, center, 40, -70, 60);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
 				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				std::cout<<"Error: "<<center - centers[0].x<<std::endl;
 				board.setSpeed(-p.first, -p.second);
+				auto end = chrono::steady_clock::now();
+				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+				std::cout<<"Time: "<<duration<<std::endl;
 			}
 
 			else
@@ -123,7 +129,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
 		//clipCapture.release();
 		//break;
