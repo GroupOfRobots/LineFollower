@@ -29,5 +29,14 @@
 
 7. Regulacja, sprawdzic czy prędkość oddalania się centrum linii od środka obrazu nie jest lepszym wejściem dla regulatora niż odległosć od środka obrazu
   
+8. Strojenie PID'a.
+K = 0.3
+Vconst = 40
+V- = -70
+V+ = 60
+T = 0.06s
+Ti = 50, dla Ti = 2 nie pokonuje trasy, problemem jest ostatni ostry zakręt, Ti = 1 - problemem jest okrągły zakręt
+Td = 0.1 - jest ok ale 0.2 też, dla 0.25 jest słabo wywala sie na przedostatnim zakręcie (oscyluje), im mniej niż 0.1 tym bardziej się buja po zakręcie chyba
+
 
 
