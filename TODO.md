@@ -17,9 +17,16 @@
 
 4. Dowiedzieć się jak działa wykrywanie konturu w open cv, móc opisać jego działanie.
 	Można spytać Słonia
+
 5. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia
+
 6. Rozwiązać problem zakrętów
+    Można analizować współrzędną y środka ciężkości, jeśli jest na dole to zatrzymaj robota i obróć tylko.
+    Można obramować kontur najmniejszym prostokatem (minAreaRect), a potem zbadać stosunek boków. Jeśli prostokątm jest œęższy niż wyższy to znaczy że zakręt.
+    https://docs.opencv.org/2.4/doc/tutorials/imgproc/shapedescriptors/bounding_rotated_ellipses/bounding_rotated_ellipses.html
+
 	Można spytać Słonia o monenty w konturze
+
 7. Regulacja, sprawdzic czy prędkość oddalania się centrum linii od środka obrazu nie jest lepszym wejściem dla regulatora niż odległosć od środka obrazu
   
 
