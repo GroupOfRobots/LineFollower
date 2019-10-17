@@ -70,8 +70,8 @@ int main()
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
-	double duration;
-	double regulation_period = 60000;
+	int duration;
+	int regulation_period = 60000;
 	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
