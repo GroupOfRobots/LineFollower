@@ -131,7 +131,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(duration - regulation_period));
+		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(regulation_period - duration));
 		//clipCapture.release();
 		//break;
 	}
