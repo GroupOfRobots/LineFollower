@@ -18,7 +18,8 @@ class Pid {
 		int ePast;
 		
 	public:
-		Pid(double K, double Ti, double Td, double T, int setPoint, int uWorkPoint, int uMin, int uMax);
+		Pid(double K, double Ti, double Td, double T, int uWorkPoint, int uMin, int uMax);
+		void setSetPoint(int setPoint);
 		std::pair<int, int> calculateControl(int processOutput);
 };
 

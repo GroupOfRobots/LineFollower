@@ -1,16 +1,20 @@
 #include "Pid.h"
 
-Pid::Pid(double K, double Ti, double Td, double T, int setPoint, int uWorkPoint, int uMin, int uMax){
+Pid::Pid(double K, double Ti, double Td, double T, int uWorkPoint, int uMin, int uMax){
 	this->K = K;
 	this->Ti = Ti;
 	this->Td = Td;
-	this->T = T;
+	this->T = T/1000000; //conversion from microseconds to milliseconds
 	this->uMin = uMin;
 	this->uMax = uMax;
-	this->setPoint = setPoint;
+	this->setPoint = 0;
 	this->uiPast = 0;
 	this->ePast = 0;
 	this->uWorkPoint = uWorkPoint;
+}
+
+void Pid::setSetPoint(int setPoint){
+	this->setPoint = setPoint;
 }
 
 std::pair<int, int> Pid::calculateControl(int processOutput){

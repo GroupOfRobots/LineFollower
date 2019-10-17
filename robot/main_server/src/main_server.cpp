@@ -70,9 +70,10 @@ int main()
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
-	Mat src;
-	double regulation_period = 100;
 	double duration;
+	double regulation_period = 60000;
+	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
+	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
@@ -109,8 +110,9 @@ int main()
 				streamer.pushFrame(frame);
 
 				//pid
+
 				int center = round(contourFinder.getSourceFrame().cols/2);
-				Pid pid(0.3, 10000, 0, 0.1, center, 40, -70, 60);
+				pid.setSetPoint(center);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
 				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				std::cout<<"Error: "<<center - centers[0].x<<std::endl;
@@ -129,8 +131,7 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
+		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(duration - regulation_period));
 		//clipCapture.release();
 		//break;
 	}
