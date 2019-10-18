@@ -55,3 +55,6 @@
 	- Vconst = 30, 
 	- V- = -25, 
 	- V+ = 25, 
+
+10. Regulator nie trzyma petli czasowej, poslizg +-3ms
+11. nie zapisuje pliku z filmem
