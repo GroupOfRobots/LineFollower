@@ -77,7 +77,7 @@ int main()
 	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
 	int frame_width = clipCapture.get(3); 
   	int frame_height = clipCapture.get(4); 
-	DataSaver dataSaver("test", "test", "", frame_width, frame_height, regulation_period);
+	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, 1000000);
 
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
@@ -120,13 +120,16 @@ int main()
 				int center = round(contourFinder.getSourceFrame().cols/2);
 				pid.setSetPoint(center);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
-				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
-				std::cout<<"Error: "<<center - centers[0].x<<std::endl;
+				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
+				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
 				board.setSpeed(-p.first, -p.second);
 				auto end = chrono::steady_clock::now();
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
-				std::cout<<"Time: "<<duration<<std::endl;
+				//std::cout<<"Time: "<<duration<<std::endl;
+				start = chrono::steady_clock::now();
 				dataSaver.setData(frame, -p.first, -p.second, center, center - centers[0].x, duration);
+				end = chrono::steady_clock::now();
+				std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
 			}
 
 			else

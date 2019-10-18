@@ -5,7 +5,7 @@ DataSaver::DataSaver(string txtFileName, string recordingFileName, string pathTo
 	this->frameHeight = frameHeight;
 	this->frameWidth = frameWidth;
 	frameInterval = int(round(frameInterval/1000000));//conversion from microseconds to seconds
-	this->videoWriter = VideoWriter(pathToSaveData + "/" + recordingFileName + ".avi", cv::VideoWriter::fourcc('M','J','P','G'), frameInterval, Size(frameWidth, frameHeight));
+	this->videoWriter = VideoWriter(pathToSaveData + "/" + recordingFileName + ".avi", CV_FOURCC('M','J','P','G'), frameInterval, Size(frameWidth, frameHeight));
 	txtWriter.open(pathToSaveData + "/" + txtFileName + ".txt");
 	start = chrono::steady_clock::now();
 }
