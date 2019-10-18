@@ -21,6 +21,7 @@
 #include "ContourFinding.h"
 #include "CenterFinding.h"
 #include "Pid.h"
+#include "DataSaver.h"
 using namespace cv;
 using namespace std;
 
@@ -67,17 +68,22 @@ int main()
 	//-----------------------------------------------------
 
 	//setup camera
+	VideoCapture clipCapture(0);
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
 	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
 	int duration;
 	int regulation_period = 60000;
 	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
+	int frame_width = clipCapture.get(3); 
+  	int frame_height = clipCapture.get(4); 
+	DataSaver dataSaver("test", "test", "", frame_width, frame_height, regulation_period);
+
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
-	VideoCapture clipCapture(0);
+
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
 	{
@@ -120,6 +126,8 @@ int main()
 				auto end = chrono::steady_clock::now();
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 				std::cout<<"Time: "<<duration<<std::endl;
+				dataSaver.setFrame(frame);
+				dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
 			}
 
 			else
