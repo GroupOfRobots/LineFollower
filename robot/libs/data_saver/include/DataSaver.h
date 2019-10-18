@@ -14,11 +14,13 @@ class DataSaver {
 		int frameHeight;
 		VideoWriter videoWriter;
 		ofstream txtWriter;
+		chrono::steady_clock::time_point start;
 		
 	public:
 		DataSaver(string txtFileName, string recordingFileName, string pathToSaveData, int frameWidth, int frameHeight, int frameInterval);
 		~DataSaver();
 		void setFrame(Mat frame);
-		void setDataToTxt(int leftMotor, int rightMotor, int setPoint, int error, int exec_duration);
+		void setDataToTxt(int leftMotor, int rightMotor, int setPoint, int error, int exec_duration, double timestamp);
+		void setData(Mat frame, int leftMotor, int rightMotor, int setPoint, int error, int exec_duration);
 };
 
