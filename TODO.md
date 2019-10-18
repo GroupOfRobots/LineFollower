@@ -58,3 +58,4 @@
 
 10. Regulator nie trzyma petli czasowej, poslizg +-3ms
 11. nie zapisuje pliku z filmem
+12. do gitignore dodać build z data_saver
