@@ -78,7 +78,7 @@ int main()
 	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
 	int frame_width = clipCapture.get(3)*scale; 
   	int frame_height = clipCapture.get(4)*scale; 
-	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, 1000000);
+	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, 1000000/regulation_period);
 
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
