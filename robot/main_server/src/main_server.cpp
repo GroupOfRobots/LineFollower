@@ -74,9 +74,10 @@ int main()
 	CenterFinding centerFinder(6);
 	int duration;
 	int regulation_period = 60000;
+	double scale = 0.5;
 	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
-	int frame_width = clipCapture.get(3); 
-  	int frame_height = clipCapture.get(4); 
+	int frame_width = clipCapture.get(3)*scale; 
+  	int frame_height = clipCapture.get(4)*scale; 
 	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, 1000000);
 
 	Mat src;
@@ -109,7 +110,7 @@ int main()
 			{
 				auto start = chrono::steady_clock::now();
 				contourFinder.setFrame(src);
-				contourFinder.setScaleFactor(0.5);//default is 0.5
+				contourFinder.setScaleFactor(scale);//default is 0.5
 				contourFinder.setThreshold(50);
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
