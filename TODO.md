@@ -59,4 +59,5 @@
 	- V- = -25, 
 	- V+ = 25, 
 
-10. Regulator nie trzyma petli czasowej, poslizg +-3ms
+10. Regulator nie trzyma petli czasowej, poslizg +-3ms.
+   Źle jest mierzony czas, złym miejscu jest wywoływane setDataToTxt().
