@@ -20,7 +20,8 @@
 4. Dowiedzieć się jak działa wykrywanie konturu w open cv, móc opisać jego działanie.
 	Można spytać Słonia
 
-5. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia
+5. Zrobić akwizycję sygnałów z regulatora przy testatch minirysia.
+	Zrobione. Nagrywanie pliku filmowego, powinno chyba odbywać się po stronie klienta by nie obciążać robota. Nagrywanie pliku filmowego wraz z txt zajmuje na rpi3 do 30 ms czasem (chyba bez streama nawet). Zapisywanie samego pliku tekstowego około 180 microsekund (raczej do 200 microsekund). 
 
 6. Rozwiązać problem zakrętów
     Można analizować współrzędną y środka ciężkości, jeśli jest na dole to zatrzymaj robota i obróć tylko.
@@ -59,5 +60,3 @@
 	- V+ = 25, 
 
 10. Regulator nie trzyma petli czasowej, poslizg +-3ms
-11. nie zapisuje pliku z filmem
-12. do gitignore dodać build z data_saver
