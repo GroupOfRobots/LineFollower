@@ -21,7 +21,6 @@
 #include "ContourFinding.h"
 #include "CenterFinding.h"
 #include "Pid.h"
-#include "DataSaver.h"
 using namespace cv;
 using namespace std;
 
@@ -68,24 +67,14 @@ int main()
 	//-----------------------------------------------------
 
 	//setup camera
-	VideoCapture clipCapture(0);
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
+	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
 	CenterFinding centerFinder(6);
-	int duration;
-	int regulation_period = 60000;
-	int threshold = 50;
-	double scale = 0.5;
-	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
-	int frame_width = clipCapture.get(3)*scale; 
-  	int frame_height = clipCapture.get(4)*scale; 
-	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, regulation_period);
-
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
-
+	VideoCapture clipCapture(0);
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
 	{
@@ -109,29 +98,19 @@ int main()
 		{	
 			if(method == 1)
 			{
-				auto start = chrono::steady_clock::now();
 				contourFinder.setFrame(src);
-				contourFinder.setScaleFactor(scale);//default is 0.5
-				contourFinder.setThreshold(threshold);
+				contourFinder.setScaleFactor(0.3);//default is 0.5
+				contourFinder.setThreshold(50);
 				std::vector<cv::Point> centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
 
 				//pid
-
 				int center = round(contourFinder.getSourceFrame().cols/2);
-				pid.setSetPoint(center);
+				Pid pid(1, 10000, 0, 0.1, center, 20, 0, 40);
 				pair<int, int> p = pid.calculateControl(centers[0].x);
-				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
-				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
+				std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				//board.setSpeed(-p.first, -p.second);
-				auto end = chrono::steady_clock::now();
-				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
-				std::cout<<"Time: "<<duration<<std::endl;
-				start = chrono::steady_clock::now();
-				dataSaver.setData(frame, -p.first, -p.second, center, center - centers[0].x, duration);
-				end = chrono::steady_clock::now();
-				std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
 			}
 
 			else
@@ -143,8 +122,8 @@ int main()
 				streamer.pushFrame(frame);
 			}
      	}
-		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(regulation_period - duration));
-		else std::cout<<"EXCEEDED REGULATION LOOP TIME"<<endl;
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
 		//clipCapture.release();
 		//break;
 	}
