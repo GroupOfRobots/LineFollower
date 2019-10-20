@@ -129,7 +129,7 @@ int main()
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 				std::cout<<"Time: "<<duration<<std::endl;
 				start = chrono::steady_clock::now();
-				dataSaver.setData(frame, -p.first, -p.second, center, center - centers[0].x, duration);
+				dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
 				end = chrono::steady_clock::now();
 				std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
 			}

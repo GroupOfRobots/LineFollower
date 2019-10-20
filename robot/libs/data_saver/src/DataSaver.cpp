@@ -20,13 +20,13 @@ void DataSaver::setFrame(Mat frame){
 	else txtWriter << "Error: couldn't write frame"<<endl;
 }
 
-void DataSaver::setDataToTxt(int leftMotor, int rightMotor, int setPoint, int error, int exec_duration, double timestamp){
+void DataSaver::setDataToTxt(int leftMotor, int rightMotor, int setPoint, int error, int exec_duration){
+	auto end = chrono::steady_clock::now();
+	double timestamp = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 	txtWriter << leftMotor << "," << rightMotor << "," << setPoint << "," << error << "," << exec_duration << "," << timestamp << endl;
 }
 
 void DataSaver::setData(Mat frame, int leftMotor, int rightMotor, int setPoint, int error, int exec_duration){
 	setFrame(frame);
-	auto end = chrono::steady_clock::now();
-	double timestamp = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-	setDataToTxt(leftMotor, rightMotor, setPoint, error, exec_duration, timestamp);
+	setDataToTxt(leftMotor, rightMotor, setPoint, error, exec_duration);
 }
