@@ -4,6 +4,8 @@
     Trzeba dać sleep w wysyłaniu obrazu - jest lepiej.
     Może dać tcp zamiast udp?
 
+	Wysyłanie obrazu daje duży narzut na pracę procesora, i wykrywanie linii działa przez to wolniej mimo że wysyłanie obrazu jest w  oddzielnym wątku. Spowolnienie wysyłania obrazu (sleep 100 ms) nie daje dużej różnicy.
+
 2. Zrobić automatyczne dobieranie progu przy binaryzacji.
     https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html
     Otsu's Binarization
