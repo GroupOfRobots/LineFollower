@@ -38,7 +38,7 @@ void UdpJpgFrameStreamer::runStream(){
 			mtx.unlock();
 		}
 		//bez tego nie dziala
-		std::this_thread::sleep_for(std::chrono::microseconds(1));
+		std::this_thread::sleep_for(std::chrono::microseconds(100000));
 	}
 }
 
