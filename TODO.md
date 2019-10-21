@@ -61,3 +61,5 @@
 
 10. Regulator nie trzyma petli czasowej, poslizg +-3ms.
    Źle jest mierzony czas, złym miejscu jest wywoływane setDataToTxt().
+
+11. Wyeliminować segmentation fault jak nie znajduje konturu
