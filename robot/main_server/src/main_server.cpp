@@ -61,10 +61,10 @@ int main()
 			fprintf(stderr, "Not able to init the bmc2835 library\n");
 			return -1;
 	}
-	//Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
-	//globalBoard = &board;
-	//board.setUp();
-	//board.resetPosition();
+	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
+	globalBoard = &board;
+	board.setUp();
+	board.resetPosition();
 	//-----------------------------------------------------
 
 	//setup camera
@@ -76,10 +76,10 @@ int main()
 	int regulation_period = 60000;
 	int threshold = 50;
 	double scale = 0.5;
-	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
+	Pid pid(0.3, 50, 0.05, regulation_period, 40, -70, 60);
 	int frame_width = clipCapture.get(3)*scale; 
   	int frame_height = clipCapture.get(4)*scale; 
-	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, regulation_period);
+	DataSaver dataSaver("test", "test", "", frame_width, frame_height, regulation_period);
 
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
@@ -124,7 +124,7 @@ int main()
 				pair<int, int> p = pid.calculateControl(centers[0].x);
 				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
-				//board.setSpeed(-p.first, -p.second);
+				board.setSpeed(-p.first, -p.second);
 				auto end = chrono::steady_clock::now();
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 				std::cout<<"Time: "<<duration<<std::endl;
