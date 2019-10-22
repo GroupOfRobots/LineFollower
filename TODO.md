@@ -60,6 +60,6 @@
 	- V+ = 25, 
 
 10. Regulator nie trzyma petli czasowej, poslizg +-3ms.
-   Źle jest mierzony czas, złym miejscu jest wywoływane setDataToTxt().
+    Naprawione, timestamp przeskakuje o 1ms bo gromadzi się czas związany z zapisywaniem do pliku. Ale generalnie pętla trzyma około 60 ms.
 
 11. Wyeliminować segmentation fault jak nie znajduje konturu
