@@ -125,7 +125,9 @@ int main()
 
 				center = round(contourFinder.getSourceFrame().cols/2);
 				pid.setSetPoint(center);
-				p = pid.calculateControl(centers[0].x);
+				if(centers.empty()) p = pair<int, int>(0, 0);
+				else p = pid.calculateControl(centers[0].x);
+
 				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
 				board.setSpeed(-p.first, -p.second);
@@ -147,7 +149,8 @@ int main()
 		else std::cout<<"EXCEEDED REGULATION LOOP TIME BY: "<< duration - regulation_period <<endl;
 		auto end1 = chrono::steady_clock::now();
 		std::cout<<"Loop time: "<< chrono::duration_cast<chrono::microseconds>(end1 - start1).count()<<endl;
-		dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
+		if(!centers.empty()) dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
+		else dataSaver.setDataToTxt(-p.first, -p.second, center, 1000000, duration);
 		//clipCapture.release();
 		//break;
 	}
