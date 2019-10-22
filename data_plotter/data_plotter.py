@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt 
 import numpy as np
+import sys
   
-filepath = 'test.txt'
+filepath = str(sys.argv[1])
 left_motor = []
 right_motor = []
 image_center = []

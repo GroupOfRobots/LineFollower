@@ -99,6 +99,10 @@ int main()
 	while(1){
 		clipCapture.read(src);
 			
+		int center;
+		pair<int, int> p; 
+		std::vector<cv::Point> centers;
+
 		if (src.empty() || src.cols == -1 || src.rows == -1)
 		{
 		    	printf("No image data from clip\n");
@@ -113,25 +117,21 @@ int main()
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(scale);//default is 0.5
 				contourFinder.setThreshold(threshold);
-				std::vector<cv::Point> centers = contourFinder.findLineCenters();
+				centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
 				streamer.pushFrame(frame);
 
 				//pid
 
-				int center = round(contourFinder.getSourceFrame().cols/2);
+				center = round(contourFinder.getSourceFrame().cols/2);
 				pid.setSetPoint(center);
-				pair<int, int> p = pid.calculateControl(centers[0].x);
+				p = pid.calculateControl(centers[0].x);
 				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
 				board.setSpeed(-p.first, -p.second);
 				auto end = chrono::steady_clock::now();
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 				std::cout<<"Time: "<<duration<<std::endl;
-				start = chrono::steady_clock::now();
-				dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
-				end = chrono::steady_clock::now();
-				std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
 			}
 
 			else
@@ -145,6 +145,10 @@ int main()
      	}
 		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(regulation_period - duration));
 		else std::cout<<"EXCEEDED REGULATION LOOP TIME"<<endl;
+		auto start = chrono::steady_clock::now();
+		dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
+		auto end = chrono::steady_clock::now();
+		std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
 		//clipCapture.release();
 		//break;
 	}
