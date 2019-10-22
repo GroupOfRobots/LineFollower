@@ -59,7 +59,8 @@
 	- V- = -25, 
 	- V+ = 25, 
 
-10. Regulator nie trzyma petli czasowej, poslizg +-3ms.
+10. Regulator nie trzyma pętli czasowej, poslizg +-3ms.
     Naprawione, timestamp przeskakuje o 1ms bo gromadzi się czas związany z zapisywaniem do pliku. Ale generalnie pętla trzyma około 60 ms.
 
-11. Wyeliminować segmentation fault jak nie znajduje konturu
+11. Wyeliminować segmentation fault jak nie znajduje konturu.
+	Naprawione.
