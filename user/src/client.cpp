@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
     boost::array<char, 64000> recv_buf;
     udp::endpoint sender_endpoint;
     std::size_t bytesReceived =1;
+    VideoWriter video("out.avi",cv::VideoWriter::fourcc('M','J','P','G'),16, Size(320, 240),true);
 
     while(bytesReceived != 0){ 
       socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);     
@@ -50,8 +51,9 @@ int main(int argc, char* argv[])
       if(recv_buf.empty()){std::cerr << "Buf is empty, got " <<bytesReceived << "bytes"<< std::endl;}
       std:vector<char> data(recv_buf.begin(), recv_buf.end());
       dst=imdecode(data,1);
-	    resize(dst, dst, Size(0,0), scaleFactor, scaleFactor, 1);
+	    //resize(dst, dst, Size(0,0), scaleFactor, scaleFactor, 1);
       display_dst(27,"Received");
+      video.write(dst);
 	}
 
 	destroyAllWindows();
