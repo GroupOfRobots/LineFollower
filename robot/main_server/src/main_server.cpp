@@ -61,10 +61,10 @@ int main()
 			fprintf(stderr, "Not able to init the bmc2835 library\n");
 			return -1;
 	}
-	//Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
-	//globalBoard = &board;
-	//board.setUp();
-	//board.resetPosition();
+	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
+	globalBoard = &board;
+	board.setUp();
+	board.resetPosition();
 	//-----------------------------------------------------
 
 	//setup camera
@@ -76,10 +76,10 @@ int main()
 	int regulation_period = 60000;
 	int threshold = 50;
 	double scale = 0.5;
-	Pid pid(0.3, 10000, 0, regulation_period, 40, -70, 60);
+	Pid pid(0.3, 50, 0.05, regulation_period, 40, -70, 60);
 	int frame_width = clipCapture.get(3)*scale; 
   	int frame_height = clipCapture.get(4)*scale; 
-	DataSaver dataSaver("test", "test", "/home/pi", frame_width, frame_height, regulation_period);
+	DataSaver dataSaver("test", "test", "/", frame_width, frame_height, regulation_period);
 
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
@@ -97,8 +97,9 @@ int main()
 
 	//main loop
 	while(1){
+		auto start1 = chrono::steady_clock::now();
+		auto start = chrono::steady_clock::now();
 		clipCapture.read(src);
-			
 		int center;
 		pair<int, int> p; 
 		std::vector<cv::Point> centers;
@@ -113,7 +114,6 @@ int main()
 		{	
 			if(method == 1)
 			{
-				auto start = chrono::steady_clock::now();
 				contourFinder.setFrame(src);
 				contourFinder.setScaleFactor(scale);//default is 0.5
 				contourFinder.setThreshold(threshold);
@@ -125,13 +125,15 @@ int main()
 
 				center = round(contourFinder.getSourceFrame().cols/2);
 				pid.setSetPoint(center);
-				p = pid.calculateControl(centers[0].x);
+				if(centers.empty()) p = pair<int, int>(0, 0);
+				else p = pid.calculateControl(centers[0].x);
+
 				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
 				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
-				//board.setSpeed(-p.first, -p.second);
+				board.setSpeed(-p.first, -p.second);
 				auto end = chrono::steady_clock::now();
 				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
-				std::cout<<"Time: "<<duration<<std::endl;
+				//std::cout<<"Time: "<<duration<<std::endl;
 			}
 
 			else
@@ -144,11 +146,11 @@ int main()
 			}
      	}
 		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(regulation_period - duration));
-		else std::cout<<"EXCEEDED REGULATION LOOP TIME"<<endl;
-		auto start = chrono::steady_clock::now();
-		dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
-		auto end = chrono::steady_clock::now();
-		std::cout<<"Saving time: "<< chrono::duration_cast<chrono::microseconds>(end - start).count()<<endl;
+		else std::cout<<"EXCEEDED REGULATION LOOP TIME BY: "<< duration - regulation_period <<endl;
+		auto end1 = chrono::steady_clock::now();
+		std::cout<<"Loop time: "<< chrono::duration_cast<chrono::microseconds>(end1 - start1).count()<<endl;
+		if(!centers.empty()) dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
+		else dataSaver.setDataToTxt(-p.first, -p.second, center, 1000000, duration);
 		//clipCapture.release();
 		//break;
 	}
