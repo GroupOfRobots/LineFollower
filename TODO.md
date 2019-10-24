@@ -65,5 +65,7 @@
 11. Wyeliminować segmentation fault jak nie znajduje konturu.
 	Naprawione.
 
-12. Spisać wszystko to co zrobiłem.
-13. Porobić testy staystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
+12. Spisać wszystko to co zrobiłem i wstawic na svn, spytać promotora o poprawność.
+13. Porobić testy statystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
+14. Przerobic drugi algorytm wykrywania linii.
+15. ROS 2 zostawic na koniec.
