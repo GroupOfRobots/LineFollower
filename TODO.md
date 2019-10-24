@@ -64,3 +64,6 @@
 
 11. Wyeliminować segmentation fault jak nie znajduje konturu.
 	Naprawione.
+
+12. Spisać wszystko to co zrobiłem.
+13. Porobić testy staystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
