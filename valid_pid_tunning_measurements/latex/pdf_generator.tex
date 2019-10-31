@@ -21,10 +21,21 @@
 }
 
 
-\newcommand{\szer}{16cm}
-\newcommand{\wys}{5.6cm}
+\newcommand{\szer}{11.0cm}
+\newcommand{\wys}{4.0cm}
 \newcommand{\size}{9cm}
 \newcommand{\odstepionowy}{1.2cm}
+
+\newcommand\xMax{28000}
+\newcommand\xMin{6000}
+
+\newcommand\yMaxPx{320}
+\newcommand\yMinPx{0}
+
+\newcommand\yMaxMotors{100}
+\newcommand\yMinMotors{-100}
+
+\newcommand{\timeUnit}{$t$(ms)}
 
 \definecolor{kolor4}{rgb}{0,0,0.1724}
 \definecolor{kolor5}{rgb}{1.0000,0.1034,0.7241}
@@ -33,31 +44,446 @@
 \begin{document}
 	
 \tikzsetnextfilename{}
-		
 \tikzsetnextfilename{}
+
+\def \mainName{K03Ti1Td0}
+\def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
-	\tikzsetnextfilename{pdf/K03Ti1Td0_miekki._er&sp}
+	\tikzsetnextfilename{pdf/\name}
 	\begin{tikzpicture}
 	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
 	width=\szer,height=\wys]
 	\nextgroupplot
-	[xmin=4000, xmax=30000,
-	xlabel=$k$,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
-	\addplot[color=green,semithick] file {../splitted/K03Ti1Td0_miekki._er&sp.txt};
-	\addplot[color=blue,semithick] file {../splitted/K03Ti1Td0_miekki._sp.txt};
-	\legend{$y_{1}$,$y^{\mathrm{zad1}}$}
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
 	\nextgroupplot
-	[xmin=4000,xmax=30000, xlabel=$k$,ylabel=$u$]
-	\addplot[const plot, color=green,semithick]
-	file {../splitted/K03Ti1Td0_miekki._mr.txt};
-	\addplot[const plot, color=blue,semithick]
-	file {../splitted/K03Ti1Td0_miekki._ml.txt};
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
 	\legend{$u_{1}$,$u_{2}$}
 	\end{groupplot}
 	\end{tikzpicture}
 \end{figure}
 
 \iffalse
+--------------------------------------------------------------------------------
 \fi
+
+\def \mainName{K03Ti50Td0}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K03Ti50Td001}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K03Ti50Td01}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K03Ti50Td03}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K03Ti100Td0}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K03Ti10000Td0}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
+\def \mainName{K05Ti10000Td0}
+\def \name{\mainName_miekki}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\def \name{\mainName_ostry}
+\tikzsetnextfilename{}
+\tikzsetnextfilename{}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMin, xmax=\xMax, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
+\iffalse
+--------------------------------------------------------------------------------
+\fi
+
 \end{document}
