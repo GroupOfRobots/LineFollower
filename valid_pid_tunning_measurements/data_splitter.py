@@ -5,7 +5,7 @@ splitted_dir = "splitted"
 
 def split(file):
     f = open(main_dir + "/" + direct + "/" + file, "r")
-    file_name = file[:-3]
+    file_name = file[:-4]
     motor_left = open(splitted_dir + "/" + file_name + "_ml.txt", "w")
     motor_right = open(splitted_dir + "/" + file_name + "_mr.txt", "w")
     set_point = open(splitted_dir + "/" + file_name + "_sp.txt", "w")
@@ -21,7 +21,6 @@ def split(file):
         error_and_sp.write(line[5]+' '+str(int(line[3])+int(line[2]))+'\n')
         exec_durr.write(line[5]+' '+line[4]+'\n')
 
-    split(file)
     f.close()
     motor_right.close()
     motor_left.close()
