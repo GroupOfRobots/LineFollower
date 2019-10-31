@@ -21,6 +21,7 @@ def split(file):
         error_and_sp.write(line[5]+' '+str(int(line[3])+int(line[2]))+'\n')
         exec_durr.write(line[5]+' '+line[4]+'\n')
 
+    split(file)
     f.close()
     motor_right.close()
     motor_left.close()
@@ -34,5 +35,3 @@ if __name__== "__main__":
         for file in os.listdir(main_dir + "/" + direct):
             if file.endswith(".txt"):
                 split(file)
-                
-
