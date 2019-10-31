@@ -9,7 +9,7 @@ def split(file):
     motor_left = open(splitted_dir + "/" + file_name + "_ml.txt", "w")
     motor_right = open(splitted_dir + "/" + file_name + "_mr.txt", "w")
     set_point = open(splitted_dir + "/" + file_name + "_sp.txt", "w")
-    error = open(splitted_dir + "/" + file_name + "_er.txt", "w")
+    error_and_sp = open(splitted_dir + "/" + file_name + "_er&sp.txt", "w")
     exec_durr = open(splitted_dir + "/" + file_name + "_ed.txt", "w")
 
     for line in f:
@@ -18,14 +18,14 @@ def split(file):
         motor_left.write(line[5]+' '+line[0]+'\n')
         motor_right.write(line[5]+' '+line[1]+'\n')
         set_point.write(line[5]+' '+line[2]+'\n')
-        error.write(line[5]+' '+line[3]+'\n')
+        error_and_sp.write(line[5]+' '+str(int(line[3])+int(line[2]))+'\n')
         exec_durr.write(line[5]+' '+line[4]+'\n')
 
     f.close()
     motor_right.close()
     motor_left.close()
     set_point.close()
-    error.close()
+    error_and_sp.close()
     exec_durr.close()
 
 
