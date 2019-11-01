@@ -66,6 +66,7 @@
 	Naprawione.
 
 12. Spisać wszystko to co zrobiłem i wstawic na svn, spytać promotora o poprawność.
-13. Porobić testy statystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
-14. Przerobic drugi algorytm wykrywania linii.
+13. Wyliczyć wskaźnik jakości dla otrzymanych wyników regulacji. Pytanie czy sens? Początkowe ułożenie robota różne i rozpoczęcie akwizycji danych w różnym momencie.
+14. Porobić testy statystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
+15. Przerobic drugi algorytm wykrywania linii.
 15. ROS 2 zostawic na koniec.
