@@ -45,7 +45,7 @@
 - PID dobry 
 	- K = 0.3, 
 	- Vconst = 40, 
-	- V- = -70, 
+	- V- = -60, 
 	- V+ = 60, 
 	- T = 0.06s, 
 	- Ti = 50, dla Ti = 2 nie pokonuje trasy, problemem jest ostatni ostry zakręt, Ti = 1 - problemem jest okrągły zakręt, 
