@@ -29,6 +29,9 @@
 \newcommand\xMax{28000}
 \newcommand\xMin{6000}
 
+\newcommand\xMaxcross{20000}
+\newcommand\xMincross{5100}
+
 \newcommand\yMaxPx{320}
 \newcommand\yMinPx{0}
 
@@ -47,6 +50,30 @@
 \tikzsetnextfilename{}
 
 \def \mainName{K03Ti1Td0}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -102,6 +129,30 @@
 \fi
 
 \def \mainName{K03Ti50Td0}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -157,6 +208,30 @@
 \fi
 
 \def \mainName{K03Ti50Td001}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -212,6 +287,30 @@
 \fi
 
 \def \mainName{K03Ti50Td01}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -267,6 +366,30 @@
 \fi
 
 \def \mainName{K03Ti50Td03}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -322,6 +445,30 @@
 \fi
 
 \def \mainName{K03Ti100Td0}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -377,6 +524,30 @@
 \fi
 
 \def \mainName{K03Ti10000Td0}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -432,6 +603,30 @@
 \fi
 
 \def \mainName{K05Ti10000Td0}
+\def \name{\mainName}
+\begin{figure}[tb]
+	\centering
+	\tikzsetnextfilename{pdf/\name}
+	\begin{tikzpicture}
+	\begin{groupplot}[group style={group size=1 by 2,vertical sep=\odstepionowy},
+	width=\szer,height=\wys]
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinPx, ymax=\yMaxPx, 
+	xlabel=\timeUnit,ylabel={$y^{\mathrm{zad}}, \ y$},legend cell align=left, legend pos=south east,]
+	\addplot[color=red,semithick] file {../splitted/\name_sp.txt};
+	\addplot[color=blue,semithick] file {../splitted/\name_er&sp.txt};
+	\legend{$y$,$y^{\mathrm{zad}}$}
+	\nextgroupplot
+	[xmin=\xMincross, xmax=\xMaxcross, ymin=\yMinMotors, ymax=\yMaxMotors, xlabel=\timeUnit,ylabel=$u$]
+	\addplot[const plot, color=kolor5,semithick]
+	file {../splitted/\name_mr.txt};
+	\addplot[const plot, color=kolor6,semithick]
+	file {../splitted/\name_ml.txt};
+	\legend{$u_{1}$,$u_{2}$}
+	\end{groupplot}
+	\end{tikzpicture}
+\end{figure}
+\iffalse
 \def \name{\mainName_miekki}
 \begin{figure}[tb]
 	\centering
@@ -481,9 +676,9 @@
 	\end{groupplot}
 	\end{tikzpicture}
 \end{figure}
+\fi
 
 \iffalse
 --------------------------------------------------------------------------------
 \fi
-
 \end{document}
