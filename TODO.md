@@ -65,8 +65,10 @@
 11. Wyeliminować segmentation fault jak nie znajduje konturu.
 	Naprawione.
 
-12. Spisać wszystko to co zrobiłem i wstawic na svn, spytać promotora o poprawność.
-13. Wyliczyć wskaźnik jakości dla otrzymanych wyników regulacji. Pytanie czy sens? Początkowe ułożenie robota różne i rozpoczęcie akwizycji danych w różnym momencie.
-14. Porobić testy statystyczne. Puścic 10 razy robota i sprawdzić ile razy przejedzie.
-15. Przerobic drugi algorytm wykrywania linii.
-15. ROS 2 zostawic na koniec.
+12. Wyliczyć jakiś wskaźnik jakości otrzymanych przebiegów (da sie bo można zmierzyć współczynnik od momentu skrętu).
+13. Porobić statystyki: odchylenie standartowe, min i max w tabelkach czasów.
+14. Porobić statystyki: ile razy rys przejechał poprawnie skrzyżowanie/zakręt (moze tylko porobić dla dostrojonego regulatora)?
+15. Sprawdzić czy da sie postawic ubuntu na rpi.
+16. Przerobic drugi algorytm wykrywania linii.
+17. Poprawić odniesienie do wzorów na \eqref
+18. Przerobić diagram modułów oprogramowania, zrobić diagramy sekwencji, używać enterprise architect.
