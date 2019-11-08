@@ -2,15 +2,15 @@ import os
 
 main_dir = "data"
 splitted_dir = "splitted"
+main_file = "test.txt"
 
-def split(file):
+def split(file, direct):
     f = open(main_dir + "/" + direct + "/" + file, "r")
-    file_name = file[:-4]
-    motor_left = open(splitted_dir + "/" + file_name + "_ml.txt", "w")
-    motor_right = open(splitted_dir + "/" + file_name + "_mr.txt", "w")
-    set_point = open(splitted_dir + "/" + file_name + "_sp.txt", "w")
-    error_and_sp = open(splitted_dir + "/" + file_name + "_er&sp.txt", "w")
-    exec_durr = open(splitted_dir + "/" + file_name + "_ed.txt", "w")
+    motor_left = open(splitted_dir + "/" + direct + "_ml.txt", "w")
+    motor_right = open(splitted_dir + "/" + direct + "_mr.txt", "w")
+    set_point = open(splitted_dir + "/" + direct + "_sp.txt", "w")
+    error_and_sp = open(splitted_dir + "/" + direct + "_er&sp.txt", "w")
+    exec_durr = open(splitted_dir + "/" + direct + "_ed.txt", "w")
 
     for line in f:
         line = line.rstrip('\r\n')
@@ -32,5 +32,5 @@ def split(file):
 if __name__== "__main__":
     for direct in os.listdir(main_dir):
         for file in os.listdir(main_dir + "/" + direct):
-            if file.endswith(".txt"):
-                split(file)
+            if file == main_file:
+                split(file, direct)
