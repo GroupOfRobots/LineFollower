@@ -2,6 +2,8 @@
 #include "l6470constants.h"
 #include "motors.h"
 #include "VL53L1X.h"
+#include "LSM6DS3.h"
+#include "filter.h"
 #include <csignal>
 #include <math.h>
 #include <fstream>
@@ -328,4 +330,105 @@ void tofTest(){
 	}
 
 	file.close();
+}
+
+void IMUtest(){
+	LSM6DS3 SensorOne( I2C_MODE, 0x6B);
+
+	if( SensorOne.begin() != 0 )
+	{
+		  printf("Problem starting the sensor \n");
+		  return;
+	}
+	else
+	{
+		  printf("Sensor with CS1 started, awaiting calibration.\n");
+		  for (int i = 10; i>0; i--){
+			  printf("%d\n",i);
+			  delay(1000);
+		  }
+	}
+	int i, n = 1000;
+
+	// Acceleration
+	float  ax, ay, az;
+	ax = SensorOne.readFloatAccelX();
+	ay = SensorOne.readFloatAccelY();
+	az = SensorOne.readFloatAccelZ();
+
+	// Gyro
+	float rgx, rgy, rgz;
+	const float offX = 3.755909, offY = -5.435584, offZ = -3.461446;
+	const float offXRad = -0.000329, offYRad = -0.000224, offZRad = 0.000880;
+	rgx = (SensorOne.readFloatGyroX() - offX)*M_PI/180 - offXRad;
+	rgy = (SensorOne.readFloatGyroY() - offY)*M_PI/180 - offYRad;
+	rgz = (SensorOne.readFloatGyroZ() - offZ)*M_PI/180 - offZRad;
+
+	// Sum of gyro readings
+	float sumgx = 0, sumgy = 0, sumgz = 0;
+
+	// Tilt
+	float ty = atan2(ax,sqrt(ay*ay+az*az));
+
+	// Filtering
+	float param = 0.1;
+	float freq = 100;
+	filter f(ty,param,freq);
+	float f_gy, f_ty;
+
+	// Log file
+	char filename [25];
+	sprintf(filename,"imu_log_report_%.3f_%04.0f", param, freq);
+	file.open(filename);
+
+	for(i=0; i<n; i++){
+		//Get all parameters
+		printf("\nAccelerometer:\n");
+		ax = SensorOne.readFloatAccelX();
+		ay = SensorOne.readFloatAccelY();
+		az = SensorOne.readFloatAccelZ();
+		printf(" X = %f\n",ax);
+		printf(" Y = %f\n",ay);
+		printf(" Z = %f\n",az);
+		printf(" ACC = %f\n", sqrt(ax*ax+ay*ay+az*az));
+
+		printf("\nGyroscope:\n");
+		rgx = (SensorOne.readFloatGyroX() - offX)*M_PI/180 - offXRad;
+		rgy = (SensorOne.readFloatGyroY() - offY)*M_PI/180 - offYRad;
+		rgz = (SensorOne.readFloatGyroZ() - offZ)*M_PI/180 - offZRad;
+		sumgx += rgx;
+		sumgy += rgy;
+		sumgz += rgz;
+		printf(" X = %f\n",rgx);
+		printf(" Y = %f",rgy);
+		printf(" Z = %f\n",rgz);
+
+		printf("\nTilt:\n");
+		ty = atan2(ax,sqrt(ay*ay+az*az));
+		printf(" Tilt = %f", ty);
+
+		printf("\nAfter filtering:\n");
+		f_ty = f.getAngle(ty,rgy);
+		f_gy = f.getGyro();
+		printf(" Gyro Y: %f", f_gy);
+		printf(" Tilt Y: %f\n", f_ty);
+
+		printf("\nThermometer:\n");
+		printf(" Degrees C = %f\n",SensorOne.readTempC());
+
+		printf("\nSensorOne Bus Errors Reported:\n");
+		printf(" All '1's = %d\n",SensorOne.allOnesCounter);
+		printf(" Non-success = %d\n",SensorOne.nonSuccessCounter);
+
+		//Write to file
+		file << i << " " << rgy << " " << ty << " " << f_gy << " " << f_ty << std::endl;
+		delay(1000/freq);
+	}
+	file.close();
+
+	printf(" Average Gyro X = %f\n", sumgx/n);
+	printf(" Average Gyro Y = %f\n", sumgy/n);
+	printf(" Average Gyro Z = %f\n", sumgz/n);
+
+	SensorOne.close_i2c();
 }
