@@ -42,7 +42,6 @@ void tofTest();
 Motors *globalBoard;
 VL53L1X *globalSensors[10];
 uint16_t measurement[10];
-uint16_t measurement[10];
 std::ofstream file;
 
 void sigintHandler(int signum) {
