@@ -1,6 +1,7 @@
 #include "bcm2835.h"
 #include "l6470constants.h"
 #include "motors.h"
+#include "VL53L1X.h"
 #include <csignal>
 #include <math.h>
 #include <fstream>
@@ -37,7 +38,10 @@ using boost::asio::ip::udp;
 #define NDEBUG
 
 void stepperTest();
+void tofTest();
 Motors *globalBoard;
+VL53L1X *globalSensors[10];
+uint16_t measurement[10];
 uint16_t measurement[10];
 std::ofstream file;
 
@@ -179,6 +183,148 @@ void stepperTest(){
 	file <<"end_left:"<< positionLeft <<"end_right:"<< positionRight<<std::endl;
 
 	board.stop();
+
+	file.close();
+}
+
+void tofTest(){
+
+	// Log file
+	file.open("distance_log_report70cm");
+
+	bcm2835_gpio_fsel(GPIO_TOF_1, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_2, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_3, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_4, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_5, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_6, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_7, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_8, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_9, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_TOF_10, BCM2835_GPIO_FSEL_OUTP);
+
+	//disable all sensors first
+	bcm2835_gpio_clr(GPIO_TOF_1); // górny
+	bcm2835_gpio_clr(GPIO_TOF_2); // górny
+	bcm2835_gpio_clr(GPIO_TOF_3);
+	bcm2835_gpio_clr(GPIO_TOF_4);
+	bcm2835_gpio_clr(GPIO_TOF_5);
+	bcm2835_gpio_clr(GPIO_TOF_6);
+	bcm2835_gpio_clr(GPIO_TOF_7);
+	bcm2835_gpio_clr(GPIO_TOF_8);
+	bcm2835_gpio_clr(GPIO_TOF_9);
+	bcm2835_gpio_clr(GPIO_TOF_10);
+
+	bcm2835_i2c_begin(); //begin I2C
+	bcm2835_i2c_set_baudrate(40000);
+
+	//enable sensor one and change address
+	bcm2835_gpio_set(GPIO_TOF_1);
+	delay(10);
+	globalSensors[0] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[0]->setAddress(0x30);
+	delay(10);
+	puts("Sensor one started at: 0x30");
+
+	bcm2835_gpio_set(GPIO_TOF_2);
+	delay(10);
+	globalSensors[1] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[1]->setAddress(0x31);
+	delay(10);
+	puts("Sensor two started at: 0x31");
+
+	bcm2835_gpio_set(GPIO_TOF_3);
+	delay(10);
+	globalSensors[2] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[2]->setAddress(0x32);
+	delay(10);
+	puts("Sensor three started at: 0x32");
+
+	bcm2835_gpio_set(GPIO_TOF_4);
+	delay(10);
+	globalSensors[3] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[3]->setAddress(0x33);
+	delay(10);
+	puts("Sensor four started at: 0x33");
+
+	bcm2835_gpio_set(GPIO_TOF_5);
+	delay(10);
+	globalSensors[4] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[4]->setAddress(0x34);
+	delay(10);
+	puts("Sensor five started at: 0x34");
+
+	bcm2835_gpio_set(GPIO_TOF_6);
+	delay(10);
+	globalSensors[5] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[5]->setAddress(0x35);
+	delay(10);
+	puts("Sensor six started at: 0x35");
+
+	bcm2835_gpio_set(GPIO_TOF_7);
+	delay(10);
+	globalSensors[6] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[6]->setAddress(0x36);
+	delay(10);
+	puts("Sensor seven started at: 0x36");
+
+	bcm2835_gpio_set(GPIO_TOF_8);
+	delay(10);
+	globalSensors[7] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[7]->setAddress(0x37);
+	delay(10);
+	puts("Sensor eight started at: 0x37");
+
+	bcm2835_gpio_set(GPIO_TOF_9);
+	delay(10);
+	globalSensors[8] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[8]->setAddress(0x38);
+	delay(10);
+	puts("Sensor nine started at: 0x38");
+
+	bcm2835_gpio_set(GPIO_TOF_10);
+	delay(10);
+	globalSensors[9] = new VL53L1X(VL53L1X::Medium,0x29);
+	delay(10);
+	globalSensors[9]->setAddress(0x39);
+	delay(10);
+	puts("Sensor ten started at: 0x39");
+
+
+	for(int i=0; i<10; i++){
+		globalSensors[i]->startContinuous(20);
+		delay(10);
+	}
+
+	for(int j=0; j<1000; j++){
+	//while(1){
+		//for(int i=0; i<10; i++){
+		//			measurement[i] = globalSensors[i]->readData(1);
+		//			printf("%d:%5d ",i,measurement[i]);
+		//}
+				measurement[5] = globalSensors[5]->readData(1);
+				printf("5:%5d ",measurement[5]);
+				measurement[8] = globalSensors[8]->readData(1);
+				printf("8:%5d ",measurement[8]);
+
+		file << measurement[5] <<" "<< measurement[8]<<std::endl;
+		printf("\n");
+		printf("\033[H\033[J");
+	}
+
+	for(int i=0; i<10; i++){
+		globalSensors[i]->disable();
+		delay(10);
+	}
 
 	file.close();
 }
