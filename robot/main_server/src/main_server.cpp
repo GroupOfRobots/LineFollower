@@ -48,7 +48,9 @@ void sigintHandler(int signum) {
 	if (signum == SIGINT) {
 		//globalBoard->Dump();
 		file.close();
-		globalBoard->stop();
+		if (globalBoard != nullptr) globalBoard->stop();
+		for(int i = 0; i < 10; i++)
+			if (globalSensors[i] != nullptr) globalSensors[i]->disable();
 		exit(signum);
 	}
 }
@@ -63,9 +65,11 @@ int main()
 			return -1;
 	}
 
+	tofTest();
+
 //	stepperTest();
 	//-----------------------------------------------------
-
+/*
 	int counter = 0;
 	double total_center_time = 0;
 	double total_drawing_time = 0;
@@ -159,7 +163,7 @@ int main()
 
 		//clipCapture.release();
 		//break;
-	}
+	}*/
 
   return 0;
 }
