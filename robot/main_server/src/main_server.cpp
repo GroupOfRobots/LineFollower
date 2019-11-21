@@ -307,6 +307,7 @@ void tofTest(){
 		globalSensors[i]->startContinuous(20);
 		delay(10);
 	}
+	printf("started coninous");
 
 	for(int j=0; j<1000; j++){
 	//while(1){
@@ -316,12 +317,9 @@ void tofTest(){
 		//}
 				measurement[5] = globalSensors[5]->readData(1);
 				printf("5:%5d ",measurement[5]);
-				measurement[8] = globalSensors[8]->readData(1);
-				printf("8:%5d ",measurement[8]);
 
-		file << measurement[5] <<" "<< measurement[8]<<std::endl;
 		printf("\n");
-		printf("\033[H\033[J");
+		delay(20);
 	}
 
 	for(int i=0; i<10; i++){
