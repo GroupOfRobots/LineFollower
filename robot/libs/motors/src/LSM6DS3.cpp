@@ -157,7 +157,7 @@ status_t LSM6DS3Core::readRegisterRegion(uint8_t *outputPointer , uint8_t offset
 	switch (commInterface) {
 
 	case I2C_MODE:
-
+	{
 
 		int i;
 		char buf[1];
@@ -182,6 +182,7 @@ status_t LSM6DS3Core::readRegisterRegion(uint8_t *outputPointer , uint8_t offset
 		}
 
 		break;
+	}
 
 	case SPI_MODE:
 		// take the chip select low to select the device:
