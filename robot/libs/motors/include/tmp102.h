@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include "gpio/gpio.h"
+#include "../include/gpio.h"
 
 
 #define DEFAULT_I2C_BUS		"/dev/i2c-0"
