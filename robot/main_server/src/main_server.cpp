@@ -1,5 +1,6 @@
 #include "VL53L1X.h"
 #include "LSM6DS3.h"
+#include "tmp102.h"
 #include "filter.h"
 #include "bcm2835.h"
 #include "l6470constants.h"
@@ -44,6 +45,7 @@ using boost::asio::ip::udp;
 
 void tofTest();
 void IMUtest();
+void TMPtest();
 void stepperTest();
 Motors *globalBoard;
 VL53L1X *globalSensors[10];
@@ -168,7 +170,7 @@ int main()
 
 	tofTest();
 	IMUtest();
-
+	TMPtest();
   return 0;
 }
 
@@ -430,4 +432,10 @@ void IMUtest(){
 	printf(" Average Gyro Z = %f\n", sumgz/n);
 
 	SensorOne.close_i2c();
+}
+
+void TMPtest(){ //
+	tmp102 czujnik(0x48,"/dev/i2c-0");
+	printf("Rys temperature: %f \n",czujnik.readTemperature());
+
 }
