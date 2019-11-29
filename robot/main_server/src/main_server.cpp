@@ -44,6 +44,7 @@ void stepperTest();
 void tofTest();
 void IMUtest();
 void TMPtest();
+void batteryTest();
 Motors *globalBoard;
 VL53L1X *globalSensors[10];
 uint16_t measurement[10];
@@ -70,9 +71,10 @@ int main()
 			return -1;
 	}
 
-	IMUtest();
-	delay(2000);
-	TMPtest();
+	//IMUtest();
+	//delay(2000);
+	//TMPtest();
+	batteryTest();
 	//stepperTest();
 	//-----------------------------------------------------
 /*
@@ -172,6 +174,25 @@ int main()
 	}*/
 
   return 0;
+}
+
+
+void batteryTest(){
+        long positionLeft,positionRight;
+        Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
+        globalBoard = &board;
+        board.setUp();
+        board.resetPosition();
+	auto timer_old = std::chrono::high_resolution_clock::now();
+	for (int j=0; j<1000; j++){
+		std::cout << board.getBatteryVoltage() << std::endl;
+	}
+	auto timer_value = std::chrono::high_resolution_clock::now();
+	auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(timer_value - timer_old);
+
+	std::cout << "1xBatteryV average time:" << std::endl;
+	std::cout << time_span.count()/1000.0 << std::endl;
+        board.stop();
 }
 
 void stepperTest(){
