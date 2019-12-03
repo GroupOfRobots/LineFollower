@@ -359,7 +359,7 @@ void tofTest(){
 	}
 
 	//file.close();
-	board.stop();
+	//board.stop();
 }
 
 void IMUtest(){
