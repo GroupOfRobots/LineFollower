@@ -20,9 +20,12 @@
 #include <boost/asio.hpp>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include <thread>
 #include "UdpJpgFrameStreamer.h"
 #include "ContourFinding.h"
 #include "CenterFinding.h"
+#include "Pid.h"
+#include "DataSaver.h"
 using namespace cv;
 using namespace std;
 
@@ -48,15 +51,16 @@ void batteryTest();
 Motors *globalBoard;
 VL53L1X *globalSensors[10];
 uint16_t measurement[10];
-std::ofstream file;
 
 void sigintHandler(int signum) {
 	if (signum == SIGINT) {
 		//globalBoard->Dump();
-		file.close();
+		//file.close();
 		if (globalBoard != nullptr) globalBoard->stop();
 		for(int i = 0; i < 10; i++)
 			if (globalSensors[i] != nullptr) globalSensors[i]->disable();
+		//globalBoard->stop();
+		std::cout<<"TASK TERMINATED"<<endl;
 		exit(signum);
 	}
 }
@@ -64,8 +68,8 @@ void sigintHandler(int signum) {
 
 int main()
 {
+	//setup motors
 	signal(SIGINT, sigintHandler);
-
 	if (bcm2835_init() == 0) {
 			fprintf(stderr, "Not able to init the bmc2835 library\n");
 			return -1;
@@ -74,25 +78,37 @@ int main()
 	//IMUtest();
 	//delay(2000);
 	//TMPtest();
-	batteryTest();
+	//batteryTest();
 	//stepperTest();
 	//-----------------------------------------------------
-/*
 	int counter = 0;
 	double total_center_time = 0;
 	double total_drawing_time = 0;
 	int max_counter = 1000;
+	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
+	globalBoard = &board;
+	board.setUp();
+	board.resetPosition();
+	//-----------------------------------------------------
+
+	//setup camera
+	VideoCapture clipCapture(0);
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
+	ContourFinding contourFinder(1.0/6.0, 5.0/6.0);
 	CenterFinding centerFinder(6);
+	int duration;
+	int regulation_period = 60000;
+	int threshold = 50;
+	double scale = 0.5;
+	Pid pid(0.3, 50, 0.05, regulation_period, 40, -70, 60);
+	int frame_width = clipCapture.get(3)*scale; 
+  	int frame_height = clipCapture.get(4)*scale; 
+	DataSaver dataSaver("test", "test", "/", frame_width, frame_height, regulation_period);
+
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
 	int method;
 	std::cin>>method;
-	//streamer.waitForClient();
-
-	//odnośnik do kamery
-	VideoCapture clipCapture(0);
 
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
@@ -100,11 +116,18 @@ int main()
 	  	cout  << "Could not open reference to clip" << endl;
 		exit(0);
 	}
-	
 	streamer.run();
+	//-----------------------------------------------------
+
+	//main loop
 	while(1){
+		auto start1 = chrono::steady_clock::now();
+		auto start = chrono::steady_clock::now();
 		clipCapture.read(src);
-			
+		int center;
+		pair<int, int> p; 
+		std::vector<cv::Point> centers;
+
 		if (src.empty() || src.cols == -1 || src.rows == -1)
 		{
 		    	printf("No image data from clip\n");
@@ -116,66 +139,48 @@ int main()
 			if(method == 1)
 			{
 				contourFinder.setFrame(src);
-				contourFinder.setScaleFactor(0.3);//default is 0.5
-
-				auto start = chrono::steady_clock::now(); 
-				std::vector<cv::Point> centers = contourFinder.findLineCenters();
-				auto end = chrono::steady_clock::now();
-				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-
-				start = chrono::steady_clock::now();
+				contourFinder.setScaleFactor(scale);//default is 0.5
+				contourFinder.setThreshold(threshold);
+				centers = contourFinder.findLineCenters();
 				Mat frame = contourFinder.drawPoints(centers);
-				end = chrono::steady_clock::now();
-				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-				++counter;
-
-				if(counter == max_counter){
-					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
-					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
-					counter = 0;
-					total_drawing_time = 0;
-					total_center_time = 0;
-				}
-
 				streamer.pushFrame(frame);
+
+				//pid
+
+				center = round(contourFinder.getSourceFrame().cols/2);
+				pid.setSetPoint(center);
+				if(centers.empty()) p = pair<int, int>(0, 0);
+				else p = pid.calculateControl(centers[0].x);
+
+				//std::cout<<"Speed: "<< -p.first << ", " << -p.second <<endl;
+				//std::cout<<"Error: "<<center - centers[0].x<<std::endl;
+				board.setSpeed(-p.first, -p.second);
+				auto end = chrono::steady_clock::now();
+				duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+				//std::cout<<"Time: "<<duration<<std::endl;
 			}
 
 			else
 			{
 				centerFinder.setFrame(src);
-				centerFinder.setScaleFactor(0.5);//default is 0.5
-
-				auto start = chrono::steady_clock::now();
+				centerFinder.setScaleFactor(0.3);//default is 0.5
 				std::vector<cv::Point> centers = centerFinder.findLineCenters();
-				auto end = chrono::steady_clock::now();
-				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-
-				start = chrono::steady_clock::now();
 				Mat frame  = centerFinder.drawPoints(centers);
-				end = chrono::steady_clock::now();
-				total_drawing_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
-				++counter;
-
-				if(counter == max_counter){
-					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
-					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
-					counter = 0;
-					total_drawing_time = 0;
-					total_center_time = 0;
-				}
-
 				streamer.pushFrame(frame);
 			}
      	}
-
-
+		if(duration < regulation_period) std::this_thread::sleep_for(std::chrono::microseconds(regulation_period - duration));
+		else std::cout<<"EXCEEDED REGULATION LOOP TIME BY: "<< duration - regulation_period <<endl;
+		auto end1 = chrono::steady_clock::now();
+		std::cout<<"Loop time: "<< chrono::duration_cast<chrono::microseconds>(end1 - start1).count()<<endl;
+		if(!centers.empty()) dataSaver.setDataToTxt(-p.first, -p.second, center, center - centers[0].x, duration);
+		else dataSaver.setDataToTxt(-p.first, -p.second, center, 1000000, duration);
 		//clipCapture.release();
 		//break;
-	}*/
+	}
 
   return 0;
 }
-
 
 void batteryTest(){
         long positionLeft,positionRight;
@@ -196,7 +201,6 @@ void batteryTest(){
 }
 
 void stepperTest(){
-
 	long positionLeft,positionRight;
 	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
 	globalBoard = &board;
@@ -210,17 +214,17 @@ void stepperTest(){
 	positionLeft = board.getPositionLeft();
 	positionRight = board.getPositionRight();
 	printf("Absolute position: Left:%lu		Right:%lu \n",positionLeft, positionRight);
-	file <<"end_left:"<< positionLeft <<"end_right:"<< positionRight<<std::endl;
+	//file <<"end_left:"<< positionLeft <<"end_right:"<< positionRight<<std::endl;
 
 	board.stop();
 
-	file.close();
+	//file.close();
 }
 
 void tofTest(){
 
 	// Log file
-	file.open("distance_log_report70cm");
+	//file.open("distance_log_report70cm");
 
 	bcm2835_gpio_fsel(GPIO_TOF_1, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(GPIO_TOF_2, BCM2835_GPIO_FSEL_OUTP);
@@ -354,7 +358,8 @@ void tofTest(){
 		delay(10);
 	}
 
-	file.close();
+	//file.close();
+	board.stop();
 }
 
 void IMUtest(){
@@ -404,7 +409,7 @@ void IMUtest(){
 	// Log file
 	char filename [25];
 	sprintf(filename,"imu_log_report_%.3f_%04.0f", param, freq);
-	file.open(filename);
+	//file.open(filename);
 
 	for(i=0; i<n; i++){
 		//Get all parameters
@@ -446,10 +451,10 @@ void IMUtest(){
 		printf(" Non-success = %d\n",SensorOne.nonSuccessCounter);
 
 		//Write to file
-		file << i << " " << rgy << " " << ty << " " << f_gy << " " << f_ty << std::endl;
+		//file << i << " " << rgy << " " << ty << " " << f_gy << " " << f_ty << std::endl;
 		delay(1000/freq);
 	}
-	file.close();
+	//file.close();
 
 	printf(" Average Gyro X = %f\n", sumgx/n);
 	printf(" Average Gyro Y = %f\n", sumgy/n);
@@ -458,7 +463,7 @@ void IMUtest(){
 	SensorOne.close_i2c();
 }
 
-void TMPtest(){ //
+void TMPtest(){ 
 	tmp102 czujnik(0x48,"/dev/i2c-1");
 	printf("Rys temperature: %f \n",czujnik.readTemperature());
 

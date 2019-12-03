@@ -30,9 +30,15 @@ include_directories(../libs/camera/include)
 set ( Udp_Communication_LIBRARIES libudp_comm.so )
 link_directories( ../libs/udp_comm/build )
 include_directories(../libs/udp_comm/include)
+set ( Pid_LIBRARIES libpid.so )
+link_directories( ../libs/pid/build )
+include_directories(../libs/pid/include)
+set ( Data_Saver_LIBRARIES libdata_saver.so )
+link_directories( ../libs/data_saver/build )
+include_directories(../libs/data_saver/include)
 
 add_executable( main_server src/main_server.cpp)
-target_link_libraries( main_server ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Motors_LIBRARIES} ${Camera_LIBRARIES} ${Udp_Communication_LIBRARIES})
+target_link_libraries( main_server ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Motors_LIBRARIES} ${Camera_LIBRARIES} ${Udp_Communication_LIBRARIES} ${Pid_LIBRARIES} ${Data_Saver_LIBRARIES})
 
 
 

@@ -19,6 +19,7 @@ class ContourFinding{
 		int max_kernel_size = 21;
 		int max_kernel_length = 31;
 		double scaleFactor = 0.5;
+		int binarize_threshold = 127;
 		vector<Point> contour;
 		vector<Vec4i> hierarchy;
 		
@@ -35,6 +36,7 @@ class ContourFinding{
 		ContourFinding(double pointFactorToStartCutting, double pointFactorToFinishCutting);
 		ContourFinding(Mat frame, double pointFactorToStartCutting, double pointFactorToFinishCutting);
 		void setFrame(Mat frame);
+		void setThreshold(int threshold);
 		void setScaleFactor(double scaleFactor);
 		double getScaleFactor();
 		Mat getSourceFrame();

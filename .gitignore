@@ -144,6 +144,7 @@ share/reports_excel/
 #Make
 robot/camera/build/
 robot/motors/build/
+robot/data_saver/build/
 robot/main_server/build/
 robot/udp_comm/build/
 user/build/
