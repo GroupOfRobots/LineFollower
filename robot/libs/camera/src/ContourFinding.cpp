@@ -55,7 +55,9 @@ void ContourFinding::cutImage(){
 }
 
 void ContourFinding::toGrayScale(){
-	cvtColor(outputFrame, outputFrame, cv::COLOR_RGB2GRAY);
+	std::vector<cv::Mat> planes(3);
+	cv::split(outputFrame, planes);
+	outputFrame = planes[0];
 }
 
 void ContourFinding::useBlur(){
@@ -71,7 +73,7 @@ void ContourFinding::dilateFrame(Mat element){
 }
 
 void ContourFinding::thresholdFrame(){
-	threshold(outputFrame, outputFrame, 127, 255, THRESH_BINARY_INV);
+	threshold(outputFrame, outputFrame, 70, 255, THRESH_BINARY_INV);
 }
 
 vector<Point> ContourFinding::findCenters(){
@@ -115,8 +117,8 @@ vector<Point> ContourFinding::findCenters(){
 	return centers;
 }
 
-vector<Point> ContourFinding::findLineCenters(){
-	scaleImage();
+void ContourFinding::prepareImage(){
+	//scaleImage();
 
 	cutImage();
 
@@ -131,8 +133,6 @@ vector<Point> ContourFinding::findLineCenters(){
 	dilateFrame(element);
 
 	thresholdFrame();
-
-	return findCenters();
 }
 
 Mat ContourFinding::drawPoints(vector<Point> centers){

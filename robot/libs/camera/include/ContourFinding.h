@@ -29,7 +29,6 @@ class ContourFinding{
 		void erodeFrame(Mat element);
 		void dilateFrame(Mat element);
 		void thresholdFrame();
-		vector<Point> findCenters();
 		
 	public:
 		ContourFinding(double pointFactorToStartCutting, double pointFactorToFinishCutting);
@@ -39,7 +38,8 @@ class ContourFinding{
 		double getScaleFactor();
 		Mat getSourceFrame();
 		Mat getOutputFrame();
-		vector<Point> findLineCenters();
+		void prepareImage();
+		vector<Point> findCenters();
 		Mat drawPoints(vector<Point> centers);
 		
 };

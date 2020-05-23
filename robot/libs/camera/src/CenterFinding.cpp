@@ -61,7 +61,9 @@ void CenterFinding::cutImage(){
 }
 
 void CenterFinding::toGrayScale(){
-	cvtColor(outputFrame, outputFrame, cv::COLOR_RGB2GRAY);
+	std::vector<cv::Mat> planes(3);
+	cv::split(outputFrame, planes);
+	outputFrame = planes[0];
 }
 
 void CenterFinding::useBlur(){
@@ -77,7 +79,7 @@ void CenterFinding::dilateFrame(Mat element){
 }
 
 void CenterFinding::thresholdFrame(){
-	threshold(outputFrame, outputFrame, 127, 255, THRESH_BINARY_INV);
+	threshold(outputFrame, outputFrame, 70, 255, THRESH_BINARY_INV);
 }
 
 vector<Point> CenterFinding::findCenters(){
@@ -86,13 +88,15 @@ vector<Point> CenterFinding::findCenters(){
 	int sum = 0;
 	int center = 0;
 	int whitePixelCounter = 0;
+	unsigned char *input = (unsigned char*)(outputFrame.data);
+
 
 	for(int i = 1; i <= numOfPoints; i++)
 	{
 		int row = i*spaceWidth;
 		for(int j = 0; j < outputFrame.cols; j++)
 		{
-			if(int(outputFrame.at<uchar>(row,j)) == 255)
+			if(int(input[outputFrame.step * j + row]) == 255)
 			{
 				sum+=j;
 				whitePixelCounter++;
@@ -112,8 +116,8 @@ vector<Point> CenterFinding::findCenters(){
 	return centers;
 }
 
-vector<Point> CenterFinding::findLineCenters(){
-	scaleImage();
+void CenterFinding::prepareImage(){
+	//scaleImage();
 	
 	//unneccesary here
 	//cutImage();
@@ -129,8 +133,6 @@ vector<Point> CenterFinding::findLineCenters(){
 	dilateFrame(element);
 
 	thresholdFrame();
-
-	return findCenters();
 }
 
 Mat CenterFinding::drawPoints(vector<Point> centers){

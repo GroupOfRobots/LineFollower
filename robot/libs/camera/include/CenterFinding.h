@@ -26,7 +26,6 @@ class CenterFinding{
 		void erodeFrame(Mat element);
 		void dilateFrame(Mat element);
 		void thresholdFrame();
-		vector<Point> findCenters();
 		
 	public:
 		CenterFinding(int numOfPixels = 3);
@@ -40,7 +39,8 @@ class CenterFinding{
 		double getScaleFactor();
 		Mat getSourceFrame();
 		Mat getOutputFrame();
-		vector<Point> findLineCenters();
+		vector<Point> findCenters();
+		void prepareImage();
 		Mat drawPoints(vector<Point> centers);
 		
 };
