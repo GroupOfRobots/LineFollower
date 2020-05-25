@@ -46,6 +46,7 @@ void sigintHandler(int signum) {
 		//globalBoard->Dump();
 		file.close();
 		globalBoard->stop();
+		exit(signum);
 	}
 }
 
@@ -63,11 +64,13 @@ int main()
 	//-----------------------------------------------------
 
 	int counter = 0;
-	double total_center_time = 0;
+	double total_prepare_time = 0;
+	double total_finding_time = 0;
 	double total_drawing_time = 0;
 	int max_counter = 1000;
 	UdpJpgFrameStreamer streamer(2024, 64000, 80);
-	ContourFinding contourFinder(1.0/3.0, 2.0/3.0);
+	double scale_factor = 0.5;
+	ContourFinding contourFinder(0.0, 1.0);//1.0/3.0, 2.0/3.0	1.0/6.0, 5.0/6.0	0.0, 1.0
 	CenterFinding centerFinder(6);
 	Mat src;
 	std::cout<<"Contour or center finding? (1/2)";
@@ -77,6 +80,11 @@ int main()
 
 	//odnośnik do kamery
 	VideoCapture clipCapture(0);
+	auto height = clipCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+	auto width = clipCapture.get(CV_CAP_PROP_FRAME_WIDTH);
+	clipCapture.set(CV_CAP_PROP_FRAME_HEIGHT, int(height*scale_factor));
+  	clipCapture.set(CV_CAP_PROP_FRAME_WIDTH, int(width*scale_factor));
+  	clipCapture.set(CV_CAP_PROP_CONVERT_RGB, false);
 
 	//sprawdzenie czy wczytano poprawnie
 	if (!clipCapture.isOpened())
@@ -100,12 +108,17 @@ int main()
 			if(method == 1)
 			{
 				contourFinder.setFrame(src);
-				contourFinder.setScaleFactor(0.3);//default is 0.5
+				contourFinder.setScaleFactor(scale_factor);//default is 0.5
 
 				auto start = chrono::steady_clock::now(); 
-				std::vector<cv::Point> centers = contourFinder.findLineCenters();
+				contourFinder.prepareImage();
 				auto end = chrono::steady_clock::now();
-				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+				total_prepare_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				start = chrono::steady_clock::now(); 
+				std::vector<cv::Point> centers = contourFinder.findCenters();
+				end = chrono::steady_clock::now();
+				total_finding_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
 
 				start = chrono::steady_clock::now();
 				Mat frame = contourFinder.drawPoints(centers);
@@ -114,11 +127,13 @@ int main()
 				++counter;
 
 				if(counter == max_counter){
-					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
+					cout << "Prepare time in microseconds: " << total_prepare_time/max_counter << " µs" << endl;
+					cout << "Center finding time in microseconds: " << total_finding_time/max_counter << " µs" << endl;
 					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
 					counter = 0;
+					total_prepare_time = 0;
+					total_finding_time = 0;
 					total_drawing_time = 0;
-					total_center_time = 0;
 				}
 
 				streamer.pushFrame(frame);
@@ -127,12 +142,17 @@ int main()
 			else
 			{
 				centerFinder.setFrame(src);
-				centerFinder.setScaleFactor(0.5);//default is 0.5
+				centerFinder.setScaleFactor(scale_factor);//default is 0.5
 
-				auto start = chrono::steady_clock::now();
-				std::vector<cv::Point> centers = centerFinder.findLineCenters();
+				auto start = chrono::steady_clock::now(); 
+				centerFinder.prepareImage();
 				auto end = chrono::steady_clock::now();
-				total_center_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+				total_prepare_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+				start = chrono::steady_clock::now();
+				std::vector<cv::Point> centers = centerFinder.findCenters();
+				end = chrono::steady_clock::now();
+				total_finding_time += chrono::duration_cast<chrono::microseconds>(end - start).count();
 
 				start = chrono::steady_clock::now();
 				Mat frame  = centerFinder.drawPoints(centers);
@@ -141,11 +161,13 @@ int main()
 				++counter;
 
 				if(counter == max_counter){
-					cout << "Center finding time in microseconds: " << total_center_time/max_counter << " µs" << endl;
+					cout << "Prepare time in microseconds: " << total_prepare_time/max_counter << " µs" << endl;
+					cout << "Center finding time in microseconds: " << total_finding_time/max_counter << " µs" << endl;
 					cout << "Drawing time in microseconds: " << total_drawing_time/max_counter << " µs" << endl;
 					counter = 0;
+					total_prepare_time = 0;
+					total_finding_time = 0;
 					total_drawing_time = 0;
-					total_center_time = 0;
 				}
 
 				streamer.pushFrame(frame);
@@ -162,28 +184,22 @@ int main()
 
 void stepperTest(){
 
-	file.open("odometry_log_report1000ms-200");
-
 	long positionLeft,positionRight;
-	int voltage;
 	Motors board( BCM2835_SPI_CS0, GPIO_RESET_OUT);
 	globalBoard = &board;
 	board.setUp();
 	board.resetPosition();
 	positionLeft = board.getPositionLeft();
 	positionRight = board.getPositionRight();
-	//voltage = board.getBatteryVoltage();
-	printf("Absolute position: Left:%lu		Right:%lu	Voltage:%d\n",positionLeft, positionRight,voltage);
-	file <<"start_left:"<< positionLeft <<"start_right:"<< positionRight<<std::endl;
-	board.setSpeed(200,200);
-	bcm2835_delay(1000);
+	printf("Absolute position: Left:%lu		Right:%lu \n",positionLeft, positionRight);
+	board.setSpeed(-20,-20);
+	bcm2835_delay(500);
 	positionLeft = board.getPositionLeft();
 	positionRight = board.getPositionRight();
-	//voltage = board.getBatteryVoltage();
-	printf("Absolute position: Left:%lu		Right:%lu	Voltage:%d\n",positionLeft, positionRight,voltage);
+	printf("Absolute position: Left:%lu		Right:%lu \n",positionLeft, positionRight);
 	file <<"end_left:"<< positionLeft <<"end_right:"<< positionRight<<std::endl;
-	bcm2835_delay(1000);
 
 	board.stop();
+
 	file.close();
 }
