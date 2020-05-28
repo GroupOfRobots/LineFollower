@@ -61,9 +61,7 @@ void CenterFinding::cutImage(){
 }
 
 void CenterFinding::toGrayScale(){
-	std::vector<cv::Mat> planes(3);
-	cv::split(outputFrame, planes);
-	outputFrame = planes[0];
+	cvtColor(outputFrame, outputFrame, cv::COLOR_BGR2GRAY);
 }
 
 void CenterFinding::useBlur(){
